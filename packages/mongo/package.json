@@ -1,6 +1,6 @@
 {
   "name": "@ts-app/mongo",
-  "version": "0.0.99",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "test:watch": "jest --config config/jest.config.js --runInBand --watch"
   },
   "dependencies": {
-    "@ts-app/common": "~0.0.99",
+    "@ts-app/common": "^0.1.0",
     "rxjs": "^6.2.1"
   },
   "devDependencies": {

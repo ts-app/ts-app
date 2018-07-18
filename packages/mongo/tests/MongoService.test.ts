@@ -1,6 +1,7 @@
 import { MongoService } from '../src'
 import { catchError, concatMap, map } from 'rxjs/operators'
 import { of } from 'rxjs'
+import { BusinessError } from '../../common/dist'
 
 describe('MongoService', async () => {
   const localUrl = 'mongodb://localhost:27017'
@@ -31,9 +32,9 @@ describe('MongoService', async () => {
       title: 'test 123',
       description: 'test 123'
     }).pipe(
-      map(createResult => {
-        expect(createResult.id.length).toBe(24)
-        return createResult.id
+      map<{ error: BusinessError, id?: string }, string>(createResult => {
+        expect(createResult.id!.length).toBe(24)
+        return createResult.id!
       }),
 
       // --- read
@@ -64,7 +65,7 @@ describe('MongoService', async () => {
       map(doc => {
         expect(doc!.title).toBe('changed 456')
         expect(doc!.description).toBe('test 123')
-        return doc.id
+        return doc!.id
       }),
 
       // -- delete
@@ -79,7 +80,7 @@ describe('MongoService', async () => {
   })
 
   test('remove() invalid ID', done => {
-    mongoService.remove('test', null).pipe(
+    mongoService.remove('test', null as any).pipe(
       catchError(e => {
         expect(e).toEqual('Invalid ID or filter')
         return of(null)
@@ -113,8 +114,8 @@ describe('MongoService', async () => {
       // get all fields
       concatMap(() => mongoService.get<DocSchema>('test', { name: 'abc' })),
       map(get => {
-        expect(get.name).toBe('abc')
-        expect(get.description).toBe('def')
+        expect(get!.name).toBe('abc')
+        expect(get!.description).toBe('def')
       }),
 
       // only projected fields

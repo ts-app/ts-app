@@ -8,8 +8,17 @@
     "no-unused-variable": false,
     "no-unused-declaration": true,
     "throw-error": true,
-
-    "rxjs-finnish": true,
-    "rxjs-no-do": true
+    "rxjs-finnish": {
+      "options": [
+        {
+          "functions": true,
+          "methods": false,
+          "parameters": true,
+          "properties": true,
+          "variables": true
+        }
+      ],
+      "rxjs-no-do": true
+    }
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@ts-template/mongo",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "develop": "npm run compile:watch",
     "doc": "typedoc --mode file --module commonjs --target ES6 --out dist/docs src",
     "lint": "tslint --project config/tsconfig-test.json",
-    "prepublishOnly": "npm run cleanr && npm run lint && npm run compile && npm test",
+    "prepublishOnly": "npm run clean && npm run lint && npm run compile && npm test",
     "test": "jest --config config/jest.config.js --runInBand",
     "test:coverage": "jest --config config/jest.config.js --coverage --collectCoverage",
     "test:debugAsync": "jest --config config/jest.config.js --runInBand --forceExit --detectOpenHandles",
@@ -27,7 +27,7 @@
   "devDependencies": {
     "jest": "^23.1.0",
     "tslint": "^5.10.0",
-    "typescript": "~2.7.2"
+    "typescript": "^2.9.2"
   },
   "peerDependencies": {
     "mongodb": ">= 3.0.10 < 4"

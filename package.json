@@ -1,0 +1,28 @@
+{
+  "name": "@ts-app/ts-app",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "init": "sh ./scripts/init.sh",
+    "reset": "sh ./scripts/reset.sh",
+    "develop": "sh ./scripts/develop.sh"
+  },
+  "author": "kctang@big2.net",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^23.1.1",
+    "@types/mongodb": "^3.0.21",
+    "jest": "^23.1.0",
+    "lerna": "^2.11.0",
+    "mongodb": "^3.0.10",
+    "rxjs-tslint": "^0.1.5",
+    "rxjs-tslint-rules": "^4.6.0",
+    "ts-jest": "^22.4.6",
+    "tslint": "^5.10.0",
+    "tslint-config-standard": "^7.0.0",
+    "tslint-etc": "^1.2.2",
+    "typedoc": "^0.11.1",
+    "typescript": "~2.7.2"
+  }
+}

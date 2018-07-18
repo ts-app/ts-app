@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "tslint-config-standard",
+    "tslint-etc",
+    "rxjs-tslint-rules"
+  ],
+  "rules": {
+    "no-unused-variable": false,
+    "no-unused-declaration": true,
+    "throw-error": true,
+
+    "rxjs-finnish": true,
+    "rxjs-no-do": true
+  }
+}

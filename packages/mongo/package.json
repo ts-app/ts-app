@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
+  "repository": "https://github.com/ts-app/ts-app/tree/master/packages/mongo",
   "publishConfig": {
     "access": "public"
   },

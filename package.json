@@ -1,8 +1,4 @@
 {
-  "name": "@ts-app/ts-app",
-  "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "init": "sh ./scripts/init.sh",
     "reset": "sh ./scripts/reset.sh",

@@ -19,6 +19,9 @@
         }
       ],
       "rxjs-no-do": true
-    }
+    },
+    "rxjs-no-internal": true,
+    "rxjs-no-unbound-methods": true,
+    "rxjs-no-unsafe-takeuntil": true
   }
 }

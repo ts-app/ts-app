@@ -1,4 +1,4 @@
-import { FindOutput, BusinessError } from '@ts-app/common'
+import { FindOutput } from '@ts-app/common'
 import { Observable, from, of, throwError } from 'rxjs'
 import {
   Collection, Cursor, Db, DeleteWriteOpResultObject, FindOneOptions, MongoClient, ObjectId
@@ -29,14 +29,14 @@ export class MongoService {
     return o
   }
 
-  create<T = object> (collectionName: string, doc: T): Observable<{ error?: BusinessError, id?: string }> {
+  create<T = object> (collectionName: string, doc: T): Observable<string> {
     return this.collection(collectionName).pipe(
       concatMap(collection => collection.insertOne(doc)),
-      map(result => {
-        if (result.result.n === 1) {
-          return { id: result.insertedId.toString() }
+      concatMap(result => {
+        if (result.result.n !== 1) {
+          return throwError(`Error creating document in collection [${collectionName}]`)
         } else {
-          return { error: { message: 'Error creating document' } }
+          return result.insertedId.toString()
         }
       })
     )
@@ -62,40 +62,35 @@ export class MongoService {
     )
   }
 
-  update (collectionName: string, id: string, update: object): Observable<{ error?: BusinessError }> {
+  update (collectionName: string, id: string, update: object): Observable<null> {
     return this.collection(collectionName).pipe(
       concatMap(collection => collection.updateOne({ _id: new ObjectId(id) }, update)),
-      map(result => {
+      concatMap(result => {
         if (result.result.ok !== 1) {
-          return {
-            error: {
-              message: `Error updating document with ID [${id}]`
-            }
-          }
+          return throwError(`Error updating document [${id}] in collection [${collectionName}]`)
         } else {
-          return {}
+          return of(null)
         }
       })
     )
   }
 
   remove (collectionName: string, idOrFilter: string | object): Observable<number> {
-    let deleteById: boolean
-    let filter: any
-
     if (!idOrFilter) {
       return throwError('Invalid ID or filter')
     }
 
-    if (typeof idOrFilter === 'string') {
-      filter = { _id: new ObjectId(idOrFilter) }
-      deleteById = true
-    } else {
-      filter = idOrFilter
-    }
-
     return this.collection(collectionName).pipe(
       concatMap(collection => {
+        let deleteById = false
+        let filter: any
+        if (typeof idOrFilter === 'string') {
+          filter = { _id: new ObjectId(idOrFilter) }
+          deleteById = true
+        } else {
+          filter = idOrFilter
+        }
+
         if (deleteById) {
           return collection.deleteOne(filter)
         } else {

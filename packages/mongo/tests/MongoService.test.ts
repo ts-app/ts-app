@@ -1,5 +1,5 @@
 import { MongoService } from '../src'
-import { catchError, concatMap, map } from 'rxjs/operators'
+import { catchError, concatMap, map, mapTo } from 'rxjs/operators'
 import { of } from 'rxjs'
 import { BusinessError } from '../../common/dist'
 
@@ -54,14 +54,10 @@ describe('MongoService', async () => {
           $set: {
             title: 'changed 456'
           }
-        }).pipe(
-          map(update => ({
-            error: update.error, id
-          }))
-        )
+        }).pipe(mapTo(id))
       }),
       // TODO: assert update...
-      concatMap(({ id }) => mongoService.get<DocSchema>('test', id)),
+      concatMap((id) => mongoService.get<DocSchema>('test', id)),
       map(doc => {
         expect(doc!.title).toBe('changed 456')
         expect(doc!.description).toBe('test 123')
@@ -135,5 +131,21 @@ describe('MongoService', async () => {
       expect.assertions(4)
       done()
     })
+  })
+
+  test('create() with null', done => {
+    mongoService.create('test', null)
+      .subscribe(
+        undefined,
+        (e: TypeError) => {
+          expect(e.message).toMatchSnapshot()
+          expect.assertions(1)
+          done()
+        },
+        () => {
+          fail('Should not be completing!')
+          done()
+        }
+      )
   })
 })

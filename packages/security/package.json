@@ -1,0 +1,39 @@
+{
+  "name": "@ts-app/security",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "repository": "https://github.com/ts-app/ts-app/tree/master/packages/security",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -fr ./dist",
+    "compile": "tsc -p config/tsconfig-compile.json",
+    "compile:watch": "tsc -p config/tsconfig-compile.json --watch",
+    "develop": "npm run compile:watch",
+    "doc": "typedoc --mode file --module commonjs --target ES6 --out dist/docs src",
+    "lint": "tslint --project config/tsconfig-test.json",
+    "prepublishOnly": "npm run clean && npm run lint && npm run compile && npm test",
+    "test": "jest --config config/jest.config.js --runInBand",
+    "test:coverage": "jest --config config/jest.config.js --coverage --collectCoverage",
+    "test:debugAsync": "jest --config config/jest.config.js --runInBand --forceExit --detectOpenHandles",
+    "test:watch": "jest --config config/jest.config.js --runInBand --watch"
+  },
+  "dependencies": {
+    "@ts-app/common": "^0.1.0",
+    "@ts-app/mongo": "^0.1.0",
+    "bcryptjs": "^2.4.3",
+    "rxjs": "^6.2.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.1",
+    "jest": "^23.1.0",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2"
+  },
+  "peerDependencies": {
+    "mongodb": ">= 3.0.10 < 4"
+  }
+}

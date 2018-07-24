@@ -1,0 +1,4 @@
+*.tgz
+config
+src
+tests

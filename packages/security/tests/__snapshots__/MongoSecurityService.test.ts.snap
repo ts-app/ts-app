@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "test@test.com",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "test",
+    "email": "test@test.com",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 2`] = `
+Object {
+  "error": Object {
+    "message": "Invalid login attempt",
+  },
+}
+`;
+
+exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 3`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "test@test.com",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "test",
+    "email": "test@test.com",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 4`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "test@test.com",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "test",
+    "email": "test@test.com",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 5`] = `
+Object {
+  "error": Object {
+    "message": "User already exist",
+  },
+}
+`;
+
+exports[`MongoSecurityService user sign up with invalid email 1`] = `
+Object {
+  "error": Object {
+    "message": "Invalid email",
+  },
+}
+`;

@@ -92,8 +92,9 @@ export class MongoSecurityService extends SecurityService {
   }
 
   users (input: FindInput): Observable<FindOutput<User>> {
-    const { q, limit = 10, cursor } = input
     let filter = {}
+    let { sort } = input
+    const { q, limit = 10, cursor, project } = input
     if (q && q.trim().length > 0) {
       filter = {
         $or: [
@@ -106,7 +107,11 @@ export class MongoSecurityService extends SecurityService {
       }
     }
 
-    return this.mongoService.findWithCursor('users', filter, limit, cursor)
+    if (!sort) {
+      sort = [ { field: 'profile.displayName', asc: true } ]
+    }
+
+    return this.mongoService.findWithCursor('users', filter, limit, cursor, sort, project)
   }
 
   removeUser (id: string): Observable<null> {

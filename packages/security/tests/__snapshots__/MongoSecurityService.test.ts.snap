@@ -1,5 +1,140 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`MongoSecurityService find users 1`] = `
+Array [
+  Object {
+    "emails": Array [
+      Object {
+        "email": "bob@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "bob",
+      "email": "bob@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "cat@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "cat",
+      "email": "cat@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "dan@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "dan",
+      "email": "dan@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "david@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "david",
+      "email": "david@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "edwin@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "edwin",
+      "email": "edwin@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "faye@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "faye",
+      "email": "faye@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+]
+`;
+
+exports[`MongoSecurityService find users 2`] = `
+Object {
+  "cursor": undefined,
+  "docs": Array [
+    Object {
+      "id": undefined,
+      "profile": Object {
+        "displayName": "dan",
+      },
+    },
+    Object {
+      "id": undefined,
+      "profile": Object {
+        "displayName": "edwin",
+      },
+    },
+  ],
+}
+`;
+
+exports[`MongoSecurityService find users 3`] = `
+Object {
+  "cursor": undefined,
+  "docs": Array [
+    Object {
+      "id": undefined,
+      "profile": Object {
+        "displayName": "edwin",
+      },
+    },
+    Object {
+      "id": undefined,
+      "profile": Object {
+        "displayName": "dan",
+      },
+    },
+  ],
+}
+`;
+
 exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 1`] = `
 Object {
   "emails": Array [

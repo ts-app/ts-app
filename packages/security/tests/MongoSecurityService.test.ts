@@ -1,6 +1,6 @@
 import { MongoService } from '@ts-app/mongo'
 import { of } from 'rxjs'
-import { catchError, concatMap, tap } from 'rxjs/operators'
+import { catchError, concatMap, tap, mergeMap, toArray } from 'rxjs/operators'
 import { MongoSecurityService, SecurityService } from '../src'
 import { omitVolatile } from '../../common/src'
 
@@ -78,6 +78,59 @@ describe('MongoSecurityService', async () => {
       tap(signUp => expect(signUp).toMatchSnapshot())
     ).subscribe(() => {
       expect.assertions(1)
+      done()
+    })
+  })
+
+  test('find users', done => {
+    of(...[
+      'bob',
+      'cat',
+      'dan',
+      'david',
+      'edwin',
+      'faye'
+    ]).pipe(
+      // --- create test users
+      mergeMap(name => securityService.signUp({
+        email: `${name}@test.local`,
+        password: 'abc123'
+      }), 5),
+      toArray(),
+      // --- default find behavior
+      concatMap(() => securityService.users({})),
+      tap(val => {
+        const docs = val.docs
+        expect(docs.map(doc => {
+          delete doc.services.password.bcrypt
+          return omitVolatile(doc)
+        })).toMatchSnapshot()
+      }),
+      // --- find users name that starts/ends with 'n', sort ascending
+      concatMap(() => securityService.users({
+        q: 'n',
+        sort: [
+          { field: 'profile.displayName', asc: true }
+        ],
+        project: {
+          'profile.displayName': 1,
+          _id: 0
+        }
+      })),
+      tap(val => expect(val).toMatchSnapshot()),
+      // --- find users name that starts/ends with 'n', sort decending
+      concatMap(() => securityService.users({
+        q: 'n',
+        sort: [
+          { field: 'profile.displayName', asc: false }
+        ],
+        project: {
+          'profile.displayName': 1,
+          _id: 0
+        }
+      })),
+      tap(val => expect(val).toMatchSnapshot())
+    ).subscribe(() => {
       done()
     })
   })

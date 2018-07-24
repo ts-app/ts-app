@@ -1,7 +1,6 @@
 import { MongoService } from '../src'
 import { catchError, concatMap, map, mapTo } from 'rxjs/operators'
 import { of } from 'rxjs'
-import { BusinessError } from '../../common/dist'
 
 describe('MongoService', async () => {
   const localUrl = 'mongodb://localhost:27017'
@@ -32,9 +31,9 @@ describe('MongoService', async () => {
       title: 'test 123',
       description: 'test 123'
     }).pipe(
-      map<{ error: BusinessError, id?: string }, string>(createResult => {
-        expect(createResult.id!.length).toBe(24)
-        return createResult.id!
+      map(id => {
+        expect(id.length).toBe(24)
+        return id
       }),
 
       // --- read
@@ -138,7 +137,7 @@ describe('MongoService', async () => {
       .subscribe(
         undefined,
         (e: TypeError) => {
-          expect(e.message).toMatchSnapshot()
+          expect(e.message).toBe('Cannot read property \'_id\' of null')
           expect.assertions(1)
           done()
         },

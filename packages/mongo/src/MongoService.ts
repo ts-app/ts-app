@@ -36,7 +36,7 @@ export class MongoService {
         if (result.result.n !== 1) {
           return throwError(`Error creating document in collection [${collectionName}]`)
         } else {
-          return result.insertedId.toString()
+          return of(result.insertedId.toString())
         }
       })
     )
@@ -126,11 +126,7 @@ export class MongoService {
     if (!this._db) {
       // TODO: parameterize options
       return from(MongoClient.connect(this.mongoUrl)).pipe(
-        map(client => {
-          this.client = client
-          this._db = client.db()
-          return this._db
-        })
+        map(client => this.updateClient(client))
       )
     } else {
       return of(this._db)
@@ -164,5 +160,11 @@ export class MongoService {
         }
       })
     )
+  }
+
+  private updateClient (client: MongoClient) {
+    this.client = client
+    this._db = client.db()
+    return this._db
   }
 }

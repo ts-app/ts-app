@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`MongoService get() with null 1`] = `"Cannot read property '_id' of null"`;

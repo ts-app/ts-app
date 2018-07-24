@@ -1,4 +1,4 @@
-import { FindOutput } from '@ts-app/common'
+import { FindOutput, LogService } from '@ts-app/common'
 import { Observable, from, of, throwError } from 'rxjs'
 import {
   Collection, Cursor, Db, DeleteWriteOpResultObject, FindOneOptions, MongoClient, ObjectId
@@ -12,7 +12,7 @@ const toMongoDoc = (doc: any) => {
   return {
     ...doc,
     get id () {
-      return doc._id.toString()
+      return doc._id ? doc._id.toString() : undefined
     },
     set id (id: string) {
       this._id = new ObjectId(id)
@@ -24,12 +24,11 @@ const toMongoDoc = (doc: any) => {
  * MongoService provides to access MongoDB via promise based functions for common usage patterns such as CRUD and pagination via cursor.
  */
 export class MongoService {
-  private mongoUrl: string
   private _db?: Db
   private client!: MongoClient
 
-  constructor (mongoUrl: string) {
-    this.mongoUrl = mongoUrl
+  constructor (private mongoUrl: string,
+               private logService?: LogService) {
   }
 
   create<T = object> (collectionName: string, doc: T): Observable<string> {
@@ -147,7 +146,9 @@ export class MongoService {
     }
   }
 
-  findWithCursor<T> (collectionName: string, filter: object, limit: number = 10, cursor?: string): Observable<FindOutput<T>> {
+  findWithCursor<T> (
+    collectionName: string, filter: object, limit: number = 10, cursor?: string,
+    sort?: { field: string, asc: boolean }[], project?: object): Observable<FindOutput<T>> {
     return this.collection(collectionName).pipe(
       concatMap((collection: Collection) => {
         let filterWithCursor = filter
@@ -158,13 +159,39 @@ export class MongoService {
           }
         }
 
-        return collection.find(filterWithCursor).limit(limit).toArray()
+        let mongoCursor = collection
+          .find(filterWithCursor)
+          .limit(limit)
+
+        // sort is parsed before passing to sort()
+        if (sort) {
+          const sortObject = sort.reduce((acc, current) => {
+            acc[ current.field ] = current.asc ? 1 : -1
+            return acc
+          }, {} as any)
+          mongoCursor = mongoCursor.sort(sortObject)
+        }
+
+        // project is passed directly to Mongo
+        if (project) {
+          mongoCursor = mongoCursor.project(project)
+        }
+
+        this.debug({
+          filterWithCursor,
+          sort,
+          project,
+          limit
+        })
+
+        return mongoCursor.toArray()
       }),
       map(docs => {
         const mongoDocs = docs.map(doc => toMongoDoc(doc))
-        const newCursor = mongoDocs.length > 0 ? mongoDocs[ mongoDocs.length - 1 ].id : null
+        const lastDoc = mongoDocs.length > 0 ? mongoDocs[ mongoDocs.length - 1 ] : null
+
         return {
-          cursor: newCursor === null ? null : newCursor.toString(),
+          cursor: lastDoc.id,
           docs: mongoDocs
         }
       })
@@ -175,5 +202,11 @@ export class MongoService {
     this.client = client
     this._db = client.db()
     return this._db
+  }
+
+  private debug (message: string | object) {
+    if (this.logService) {
+      this.logService.debug(message)
+    }
   }
 }

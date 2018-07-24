@@ -2,6 +2,7 @@ import { MongoService } from '../src'
 import { catchError, concatMap, map, mapTo } from 'rxjs/operators'
 import { of } from 'rxjs'
 
+/* tslint:disable:rxjs-no-unsafe-scope */
 describe('MongoService', async () => {
   const localUrl = 'mongodb://localhost:27017'
   let mongoService: MongoService

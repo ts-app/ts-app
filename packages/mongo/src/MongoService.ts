@@ -6,6 +6,21 @@ import {
 import { concatMap, map, mapTo } from 'rxjs/operators'
 
 /**
+ * Returns an object where read/write to "id" property is mapped to Mongo's Object ID.
+ */
+const toMongoDoc = (doc: any) => {
+  return {
+    ...doc,
+    get id () {
+      return doc._id.toString()
+    },
+    set id (id: string) {
+      this._id = new ObjectId(id)
+    }
+  }
+}
+
+/**
  * MongoService provides to access MongoDB via promise based functions for common usage patterns such as CRUD and pagination via cursor.
  */
 export class MongoService {
@@ -15,18 +30,6 @@ export class MongoService {
 
   constructor (mongoUrl: string) {
     this.mongoUrl = mongoUrl
-  }
-
-  static mapMongoId<T> (o: any): T {
-    if (Array.isArray(o)) {
-      o = o.map(doc => {
-        doc.id = doc._id.toString()
-        return doc
-      })
-    } else {
-      o.id = o._id.toString()
-    }
-    return o
   }
 
   create<T = object> (collectionName: string, doc: T): Observable<string> {
@@ -43,16 +46,19 @@ export class MongoService {
   }
 
   get<T> (collectionName: string, idOrFilter: string | object, options?: FindOneOptions): Observable<T | null> {
-    let filter: any
-    if (typeof idOrFilter === 'string') {
-      filter = { _id: new ObjectId(idOrFilter) }
-    } else {
-      filter = idOrFilter
-    }
-
     return this.collection(collectionName).pipe(
-      concatMap(collection => collection.findOne(filter, options)),
-      map(doc => doc ? MongoService.mapMongoId(doc) : null)
+      concatMap(collection => {
+        // if idOrFilter is string, place it in an object with key of _id
+        let filter: any
+        if (typeof idOrFilter === 'string') {
+          filter = { _id: new ObjectId(idOrFilter) }
+        } else {
+          filter = idOrFilter
+        }
+
+        return collection.findOne(filter, options)
+      }),
+      map(doc => doc ? toMongoDoc(doc) : null)
     )
   }
 
@@ -142,21 +148,24 @@ export class MongoService {
   }
 
   findWithCursor<T> (collectionName: string, filter: object, limit: number = 10, cursor?: string): Observable<FindOutput<T>> {
-    let filterWithCursor = filter
-    if (cursor) {
-      filterWithCursor = {
-        ...filterWithCursor,
-        _id: { $gt: new ObjectId(cursor) }
-      }
-    }
-
     return this.collection(collectionName).pipe(
-      concatMap((collection: Collection) => collection.find(filterWithCursor).limit(limit).toArray()),
+      concatMap((collection: Collection) => {
+        let filterWithCursor = filter
+        if (cursor) {
+          filterWithCursor = {
+            ...filterWithCursor,
+            _id: { $gt: new ObjectId(cursor) }
+          }
+        }
+
+        return collection.find(filterWithCursor).limit(limit).toArray()
+      }),
       map(docs => {
-        const newCursor = docs.length > 0 ? docs[ docs.length - 1 ][ '_id' ] : null
+        const mongoDocs = docs.map(doc => toMongoDoc(doc))
+        const newCursor = mongoDocs.length > 0 ? mongoDocs[ mongoDocs.length - 1 ].id : null
         return {
           cursor: newCursor === null ? null : newCursor.toString(),
-          docs: MongoService.mapMongoId<T[]>(docs)
+          docs: mongoDocs
         }
       })
     )

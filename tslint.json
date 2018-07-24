@@ -22,6 +22,7 @@
     },
     "rxjs-no-internal": true,
     "rxjs-no-unbound-methods": true,
+    "rxjs-no-unsafe-scope": true,
     "rxjs-no-unsafe-takeuntil": true
   }
 }

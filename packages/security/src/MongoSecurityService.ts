@@ -2,6 +2,7 @@ import * as bcryptjs from 'bcryptjs'
 import { SecurityService } from './SecurityService'
 import { of, Observable, from, throwError, range } from 'rxjs'
 import {
+  makeTimestampable,
   ofBusinessError,
   escapeRegex,
   validateEmail,
@@ -32,7 +33,7 @@ export class MongoSecurityService extends SecurityService {
           return from(bcryptjs.hash(input.password, 8)).pipe(
             concatMap(bcrypt => {
               const makeUser = (bcrypt: string) => ({
-                creationDate: new Date(),
+                ...makeTimestampable(),
                 services: {
                   password: { bcrypt }
                 },

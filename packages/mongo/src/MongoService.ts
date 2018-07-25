@@ -114,6 +114,12 @@ export class MongoService {
     )
   }
 
+  count (collectionName: string): Observable<number> {
+    return this.collection(collectionName).pipe(
+      concatMap(collection => collection.countDocuments())
+    )
+  }
+
   dropCollection (collectionName: string): Observable<boolean> {
     return this.collection(collectionName).pipe(
       concatMap((collection: Collection) => collection.drop())
@@ -191,7 +197,7 @@ export class MongoService {
         const lastDoc = mongoDocs.length > 0 ? mongoDocs[ mongoDocs.length - 1 ] : null
 
         return {
-          cursor: lastDoc.id,
+          cursor: lastDoc ? lastDoc.id : null,
           docs: mongoDocs
         }
       })

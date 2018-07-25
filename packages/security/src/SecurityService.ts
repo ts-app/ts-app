@@ -20,14 +20,14 @@ export abstract class SecurityService {
 
   abstract removeUser (id: string): Observable<null>
 
-  abstract seedUsers (input?: {
+  abstract seedUsers (input: {
     force?: boolean
     userCount?: number
   }): Observable<null>
 
-  abstract updateProfile<T extends UserProfile = UserProfile> (input: {
+  abstract updateProfile<T extends UserProfile> (input: {
     id: string
-    profile: T
+    profile: Partial<T>
   }): Observable<null>
 
   abstract reset (): Observable<null>

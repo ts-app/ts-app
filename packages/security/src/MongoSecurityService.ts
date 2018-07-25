@@ -1,6 +1,6 @@
 import * as bcryptjs from 'bcryptjs'
 import { SecurityService } from './SecurityService'
-import { of, Observable, from, throwError } from 'rxjs'
+import { of, Observable, from, throwError, range } from 'rxjs'
 import {
   ofBusinessError,
   escapeRegex,
@@ -12,7 +12,7 @@ import {
   UserProfile
 } from '@ts-app/common'
 import { MongoService } from '@ts-app/mongo'
-import { concatMap, map, mapTo } from 'rxjs/operators'
+import { concatMap, map, mapTo, toArray } from 'rxjs/operators'
 
 export class MongoSecurityService extends SecurityService {
   constructor (private mongoService: MongoService) {
@@ -47,7 +47,7 @@ export class MongoSecurityService extends SecurityService {
                   displayName: input.email.substr(0, input.email.indexOf('@'))
                 }
               })
-              return this.mongoService.create<Partial<User>>('users', makeUser(bcrypt))
+              return this.mongoService.create('users', makeUser(bcrypt))
             }),
             concatMap(id => this.mongoService.get('users', id)),
             map(user => user ? { user: user } : { error: `Error loading user [${input.email}]` })
@@ -118,11 +118,44 @@ export class MongoSecurityService extends SecurityService {
     return this.mongoService.remove('users', id).pipe(mapTo(null))
   }
 
-  seedUsers (input?: { force?: boolean; userCount?: number }): Observable<null> {
-    return of(null)
+  seedUsers (input: { force?: boolean; userCount?: number }): Observable<null> {
+    return of(input.force).pipe(
+      // --- if forced, remove any existing seeded test users
+      concatMap(force => {
+        if (force) {
+          return this.mongoService.remove('users', {
+            $or: [
+              { 'emails.email': { $regex: 'user[0-9]+@test\.local' } },
+              { 'emails.email': 'admin@test.local' }
+            ]
+          })
+        }
+        return of(null)
+      }),
+      // --- prevent seeding if users exist (force just remove previously seeded users)
+      concatMap(() => this.mongoService.count('users')),
+      concatMap(userCount => userCount > 0 ? throwError('Cannot seed database with users') : of(null)),
+      // --- seed users
+      // create admin
+      concatMap(() => this.signUp({ email: 'admin@test.local', password: 'testAdmin' })),
+      // throw error if admin sign up error
+      concatMap(signUp => signUp.error ? throwError(signUp.error) : of(null)),
+      // seed 10 users
+      concatMap(() => range(1, 10)),
+      concatMap(no => this.signUp({
+        email: `user${no}@test.local`,
+        password: `testUser${no}`
+      })),
+      // throw error if user sign up error
+      concatMap(signUp => {
+        return signUp.error ? throwError(signUp.error) : of(null)
+      }),
+      toArray(),
+      mapTo(null)
+    )
   }
 
-  updateProfile<T extends UserProfile> (input: { id: string; profile: T }): Observable<null> {
+  updateProfile<T extends UserProfile> (input: { id: string; profile: Partial<T> }): Observable<null> {
     const profileWithPrefix = Object.keys(input.profile).reduce((p, key) => {
       p[ `profile.${key}` ] = (input.profile as any)[ key ]
       return p

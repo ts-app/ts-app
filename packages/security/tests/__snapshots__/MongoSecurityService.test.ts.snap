@@ -135,6 +135,204 @@ Object {
 }
 `;
 
+exports[`MongoSecurityService remove user 1`] = `
+Object {
+  "cursor": null,
+  "docs": Array [],
+}
+`;
+
+exports[`MongoSecurityService seed users 1`] = `
+Array [
+  Object {
+    "emails": Array [
+      Object {
+        "email": "admin@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "admin",
+      "email": "admin@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "user1@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "user1",
+      "email": "user1@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "user10@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "user10",
+      "email": "user10@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "user2@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "user2",
+      "email": "user2@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "user3@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "user3",
+      "email": "user3@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "user4@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "user4",
+      "email": "user4@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "user5@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "user5",
+      "email": "user5@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "user6@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "user6",
+      "email": "user6@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "user7@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "user7",
+      "email": "user7@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+  Object {
+    "emails": Array [
+      Object {
+        "email": "user8@test.local",
+        "verified": true,
+      },
+    ],
+    "profile": Object {
+      "displayName": "user8",
+      "email": "user8@test.local",
+    },
+    "services": Object {
+      "password": Object {},
+    },
+  },
+]
+`;
+
+exports[`MongoSecurityService update profile 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "bob@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "bob",
+    "email": "bob@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoSecurityService update profile 2`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "bob@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "Bobby",
+    "email": "bob@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
 exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 1`] = `
 Object {
   "emails": Array [

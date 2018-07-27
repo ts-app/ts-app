@@ -11,7 +11,7 @@
     "@types/mongodb": "^3.1.2",
     "jest": "^23.1.0",
     "lerna": "^2.11.0",
-    "mongodb": "^3.0.10",
+    "mongodb": "~3.0.10",
     "rxjs-tslint": "^0.1.5",
     "rxjs-tslint-rules": "^4.7.0",
     "ts-jest": "^22.4.6",

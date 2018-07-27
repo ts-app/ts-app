@@ -1,9 +1,10 @@
-import { FindOutput, LogService } from '@ts-app/common'
+import { FindInput, FindOutput, LogService } from '@ts-app/common'
 import { Observable, from, of, throwError } from 'rxjs'
 import {
   Collection, Cursor, Db, DeleteWriteOpResultObject, FindOneOptions, MongoClient, ObjectId
 } from 'mongodb'
 import { concatMap, map, mapTo } from 'rxjs/operators'
+import { escapeRegex } from '../../common/dist'
 
 /**
  * Returns an object where read/write to "id" property is mapped to Mongo's Object ID.
@@ -31,7 +32,7 @@ export class MongoService {
                private logService?: LogService) {
   }
 
-  create<T = object> (collectionName: string, doc: T): Observable<string> {
+  create<T> (collectionName: string, doc: Pick<T, Exclude<keyof T, 'id'>>): Observable<string> {
     return this.collection(collectionName).pipe(
       concatMap(collection => collection.insertOne(doc)),
       concatMap(result => {
@@ -116,7 +117,7 @@ export class MongoService {
 
   count (collectionName: string): Observable<number> {
     return this.collection(collectionName).pipe(
-      concatMap(collection => collection.countDocuments())
+      concatMap(collection => collection.count())
     )
   }
 
@@ -202,6 +203,34 @@ export class MongoService {
         }
       })
     )
+  }
+
+  find<T> (input: FindInput, collectionName: string, findBy: string[], defaultSort?: { field: string, asc: boolean }[]) {
+    let filter = {}
+    let { sort } = input
+    const { q, limit, cursor, project } = input
+    if (q && q.trim().length > 0) {
+      filter = {
+        $or: [
+          ...[ findBy.map(name => {
+            // why "input.q!"?
+            // reason: https://github.com/cartant/rxjs-tslint-rules/issues/54
+            return { [ name ]: { $regex: `^${escapeRegex(input.q!)}`, $options: 'i' } }
+          }) ]
+        ]
+      }
+    }
+
+    // if sort is not specified in input, determine default sort
+    // if default sort is not specified, derive from first findBy field
+    if (!sort) {
+      if (!defaultSort && findBy.length > 0) {
+        defaultSort = [ { field: findBy[ 0 ], asc: true } ]
+      }
+      sort = defaultSort
+    }
+
+    return this.findWithCursor<T>(collectionName, filter, limit, cursor, sort, project)
   }
 
   private updateClient (client: MongoClient) {

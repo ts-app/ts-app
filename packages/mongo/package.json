@@ -31,6 +31,6 @@
     "typescript": "^2.9.2"
   },
   "peerDependencies": {
-    "mongodb": ">= 3.0.10 < 4"
+    "mongodb": ">= 3.0.10 < 3.1"
   }
 }

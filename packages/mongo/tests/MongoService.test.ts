@@ -28,7 +28,6 @@ describe('MongoService', async () => {
 
     // --- create
     mongoService.create<DocSchema>('test', {
-      id: '',
       title: 'test 123',
       description: 'test 123'
     }).pipe(
@@ -133,17 +132,13 @@ describe('MongoService', async () => {
     })
   })
 
-  test('create() with null', done => {
-    mongoService.create('test', null)
+  test('create() empty document', done => {
+    mongoService.create('test', {})
       .subscribe(
+        id => expect(id.length).toBe(24),
         undefined,
-        (e: TypeError) => {
-          expect(e.message).toBe('Cannot read property \'_id\' of null')
-          expect.assertions(1)
-          done()
-        },
         () => {
-          fail('Should not be completing!')
+          expect.assertions(1)
           done()
         }
       )

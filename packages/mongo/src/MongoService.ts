@@ -10,14 +10,18 @@ import { escapeRegex } from '../../common/dist'
  * Returns an object where read/write to "id" property is mapped to Mongo's Object ID.
  */
 const toMongoDoc = (doc: any) => {
-  return {
-    ...doc,
-    get id () {
-      return doc._id ? doc._id.toString() : undefined
-    },
-    set id (id: string) {
-      this._id = new ObjectId(id)
+  if (doc._id !== undefined) {
+    return {
+      ...doc,
+      get id () {
+        return doc._id ? doc._id.toString() : undefined
+      },
+      set id (id: string) {
+        this._id = new ObjectId(id)
+      }
     }
+  } else {
+    return doc
   }
 }
 

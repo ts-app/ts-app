@@ -1,0 +1,842 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MongoRoleService addUsersToRoles 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-1@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-1",
+    "email": "user-1@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 2`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-2@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-2",
+    "email": "user-2@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 3`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-3@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-3",
+    "email": "user-3@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 4`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-4@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-4",
+    "email": "user-4@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 5`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-5@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-5",
+    "email": "user-5@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 6`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "admin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "admin",
+    "email": "admin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 7`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "superadmin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "superadmin",
+    "email": "superadmin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 8`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-1@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-1",
+    "email": "user-1@test.local",
+  },
+  "roles": Array [
+    Object {
+      "group": "_global_",
+      "role": "members",
+    },
+  ],
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 9`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-2@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-2",
+    "email": "user-2@test.local",
+  },
+  "roles": Array [
+    Object {
+      "group": "_global_",
+      "role": "members",
+    },
+    Object {
+      "group": "site-2",
+      "role": "users-two",
+    },
+    Object {
+      "group": "site-2",
+      "role": "admins",
+    },
+  ],
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 10`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-3@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-3",
+    "email": "user-3@test.local",
+  },
+  "roles": Array [
+    Object {
+      "group": "_global_",
+      "role": "members",
+    },
+  ],
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 11`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-4@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-4",
+    "email": "user-4@test.local",
+  },
+  "roles": Array [
+    Object {
+      "group": "_global_",
+      "role": "members",
+    },
+  ],
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 12`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-5@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-5",
+    "email": "user-5@test.local",
+  },
+  "roles": Array [
+    Object {
+      "group": "_global_",
+      "role": "members",
+    },
+  ],
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 13`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "admin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "admin",
+    "email": "admin@test.local",
+  },
+  "roles": Array [
+    Object {
+      "group": "site-5",
+      "role": "users",
+    },
+    Object {
+      "group": "site-5",
+      "role": "admins",
+    },
+  ],
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService addUsersToRoles 14`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "superadmin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "superadmin",
+    "email": "superadmin@test.local",
+  },
+  "roles": Array [
+    Object {
+      "group": "site-5",
+      "role": "users",
+    },
+    Object {
+      "group": "site-5",
+      "role": "admins",
+    },
+    Object {
+      "group": "_global_",
+      "role": "superadmins",
+    },
+  ],
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid parameters 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-1@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-1",
+    "email": "user-1@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid parameters 2`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-2@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-2",
+    "email": "user-2@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid parameters 3`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-3@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-3",
+    "email": "user-3@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid parameters 4`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-4@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-4",
+    "email": "user-4@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid parameters 5`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-5@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-5",
+    "email": "user-5@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid parameters 6`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "admin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "admin",
+    "email": "admin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid parameters 7`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "superadmin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "superadmin",
+    "email": "superadmin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid role 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-1@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-1",
+    "email": "user-1@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid role 2`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-2@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-2",
+    "email": "user-2@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid role 3`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-3@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-3",
+    "email": "user-3@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid role 4`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-4@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-4",
+    "email": "user-4@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid role 5`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-5@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-5",
+    "email": "user-5@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid role 6`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "admin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "admin",
+    "email": "admin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser with invalid role 7`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "superadmin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "superadmin",
+    "email": "superadmin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-1@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-1",
+    "email": "user-1@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() 2`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-2@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-2",
+    "email": "user-2@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() 3`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-3@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-3",
+    "email": "user-3@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() 4`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-4@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-4",
+    "email": "user-4@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() 5`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-5@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-5",
+    "email": "user-5@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() 6`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "admin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "admin",
+    "email": "admin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() 7`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "superadmin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "superadmin",
+    "email": "superadmin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService removeRole() 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-1@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-1",
+    "email": "user-1@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService removeRole() 2`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-2@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-2",
+    "email": "user-2@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService removeRole() 3`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-3@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-3",
+    "email": "user-3@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService removeRole() 4`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-4@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-4",
+    "email": "user-4@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService removeRole() 5`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-5@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-5",
+    "email": "user-5@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService removeRole() 6`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "admin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "admin",
+    "email": "admin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService removeRole() 7`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "superadmin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "superadmin",
+    "email": "superadmin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService removeRole() 8`] = `
+Object {
+  "cursor": undefined,
+  "docs": Array [
+    Object {
+      "name": "admins",
+    },
+    Object {
+      "name": "members",
+    },
+    Object {
+      "name": "superadmins",
+    },
+    Object {
+      "name": "users",
+    },
+    Object {
+      "name": "users-two",
+    },
+  ],
+}
+`;

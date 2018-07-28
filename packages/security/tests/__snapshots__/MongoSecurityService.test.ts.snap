@@ -100,13 +100,11 @@ Object {
   "cursor": undefined,
   "docs": Array [
     Object {
-      "id": undefined,
       "profile": Object {
         "displayName": "dan",
       },
     },
     Object {
-      "id": undefined,
       "profile": Object {
         "displayName": "edwin",
       },
@@ -120,13 +118,11 @@ Object {
   "cursor": undefined,
   "docs": Array [
     Object {
-      "id": undefined,
       "profile": Object {
         "displayName": "edwin",
       },
     },
     Object {
-      "id": undefined,
       "profile": Object {
         "displayName": "dan",
       },

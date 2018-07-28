@@ -95,7 +95,7 @@ export class MongoSecurityService extends SecurityService {
   users (input: FindInput): Observable<FindOutput<User>> {
     let filter = {}
     let { sort } = input
-    const { q, limit = 10, cursor, project } = input
+    const { q, limit, cursor, project } = input
     if (q && q.trim().length > 0) {
       filter = {
         $or: [

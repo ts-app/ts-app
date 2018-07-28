@@ -1,3 +1,4 @@
+export * from './assert'
 export * from './BusinessError'
 export * from './ConsoleLogService'
 export * from './echo'

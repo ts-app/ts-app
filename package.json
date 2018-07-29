@@ -2,13 +2,16 @@
   "scripts": {
     "init": "sh ./scripts/init.sh",
     "reset": "sh ./scripts/reset.sh",
-    "develop": "sh ./scripts/develop.sh"
+    "develop": "sh ./scripts/develop.sh",
+    "precommit": "lerna run test",
+    "prepush": "lerna run lint && lerna run test"
   },
   "author": "kctang@big2.net",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^23.1.1",
     "@types/mongodb": "^3.1.2",
+    "husky": "^0.14.3",
     "jest": "^23.1.0",
     "lerna": "^2.11.0",
     "mongodb": "~3.0.10",

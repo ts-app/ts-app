@@ -566,6 +566,24 @@ Object {
 }
 `;
 
+exports[`MongoRoleService getGroupsForUser() 8`] = `
+Array [
+  Array [],
+  Array [
+    "site-2",
+  ],
+  Array [],
+  Array [],
+  Array [],
+  Array [
+    "site-5",
+  ],
+  Array [
+    "site-5",
+  ],
+]
+`;
+
 exports[`MongoRoleService removeRole() 1`] = `
 Object {
   "emails": Array [

@@ -148,15 +148,16 @@ describe('MongoRoleService', async () => {
   test('getGroupsForUser with invalid user ID', done => {
     roleService.getGroupsForUser({ userId: '123456789012' })
       .subscribe(
-        () => fail(),
-        e => {
-          expect(e).toBe('Error getting groups for user [123456789012]')
+        groups => expect(groups).toEqual([]),
+        undefined,
+        () => {
+          expect.assertions(1)
           done()
         }
       )
   })
 
-  test.only('getGroupsForUser with invalid parameters', done => {
+  test('getGroupsForUser with invalid parameters', done => {
     createTestUsers$().pipe(
       // --- invalid user ID
       concatMap(userIds => {

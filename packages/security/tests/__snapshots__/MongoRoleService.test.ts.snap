@@ -314,7 +314,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService getGroupsForUser with invalid parameters 1`] = `
+exports[`MongoRoleService findRoles() 1`] = `
 Object {
   "emails": Array [
     Object {
@@ -332,7 +332,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService getGroupsForUser with invalid parameters 2`] = `
+exports[`MongoRoleService findRoles() 2`] = `
 Object {
   "emails": Array [
     Object {
@@ -350,7 +350,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService getGroupsForUser with invalid parameters 3`] = `
+exports[`MongoRoleService findRoles() 3`] = `
 Object {
   "emails": Array [
     Object {
@@ -368,7 +368,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService getGroupsForUser with invalid parameters 4`] = `
+exports[`MongoRoleService findRoles() 4`] = `
 Object {
   "emails": Array [
     Object {
@@ -386,7 +386,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService getGroupsForUser with invalid parameters 5`] = `
+exports[`MongoRoleService findRoles() 5`] = `
 Object {
   "emails": Array [
     Object {
@@ -404,7 +404,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService getGroupsForUser with invalid parameters 6`] = `
+exports[`MongoRoleService findRoles() 6`] = `
 Object {
   "emails": Array [
     Object {
@@ -422,7 +422,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService getGroupsForUser with invalid parameters 7`] = `
+exports[`MongoRoleService findRoles() 7`] = `
 Object {
   "emails": Array [
     Object {
@@ -437,6 +437,29 @@ Object {
   "services": Object {
     "password": Object {},
   },
+}
+`;
+
+exports[`MongoRoleService findRoles() 8`] = `
+Object {
+  "cursor": undefined,
+  "docs": Array [
+    Object {
+      "name": "admins",
+    },
+    Object {
+      "name": "members",
+    },
+    Object {
+      "name": "superadmins",
+    },
+    Object {
+      "name": "users",
+    },
+    Object {
+      "name": "users-two",
+    },
+  ],
 }
 `;
 
@@ -582,6 +605,132 @@ Array [
     "site-5",
   ],
 ]
+`;
+
+exports[`MongoRoleService getGroupsForUser() with invalid parameters 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-1@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-1",
+    "email": "user-1@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() with invalid parameters 2`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-2@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-2",
+    "email": "user-2@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() with invalid parameters 3`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-3@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-3",
+    "email": "user-3@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() with invalid parameters 4`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-4@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-4",
+    "email": "user-4@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() with invalid parameters 5`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-5@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-5",
+    "email": "user-5@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() with invalid parameters 6`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "admin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "admin",
+    "email": "admin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getGroupsForUser() with invalid parameters 7`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "superadmin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "superadmin",
+    "email": "superadmin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
 `;
 
 exports[`MongoRoleService removeRole() 1`] = `

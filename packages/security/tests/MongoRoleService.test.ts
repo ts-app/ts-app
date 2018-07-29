@@ -145,7 +145,7 @@ describe('MongoRoleService', async () => {
     )
   })
 
-  test('getGroupsForUser with invalid user ID', done => {
+  test('getGroupsForUser() with invalid user ID', done => {
     roleService.getGroupsForUser({ userId: '123456789012' })
       .subscribe(
         groups => expect(groups).toEqual([]),
@@ -157,7 +157,7 @@ describe('MongoRoleService', async () => {
       )
   })
 
-  test('getGroupsForUser with invalid parameters', done => {
+  test('getGroupsForUser() with invalid parameters', done => {
     createTestUsers$().pipe(
       // --- invalid user ID
       concatMap(userIds => {
@@ -169,29 +169,36 @@ describe('MongoRoleService', async () => {
           mapTo(userIds)
         )
       }),
+      // --- user ID with no groups
       concatMap(userIds => {
-        // --- user ID with no groups
         return roleService.getGroupsForUser({ userId: userIds.user1 }).pipe(
           tap(getGroupsForUser => expect(getGroupsForUser).toEqual([])),
           mapTo(userIds)
         )
       }),
+      // --- user ID with group but not specifying role
       concatMap(userIds => {
-        // --- user ID with group but not specifying role
         return roleService.getGroupsForUser({ userId: userIds.user2 }).pipe(
           tap(getGroupsForUser => expect(getGroupsForUser).toEqual([ 'site-2' ])),
           mapTo(userIds)
         )
       }),
+      // --- user ID with group and specify role name that does not exist
       concatMap(userIds => {
-        // --- user ID with group and specify wrong role name
         return roleService.getGroupsForUser({ userId: userIds.user2, role: 'no-such-role' }).pipe(
           tap(getGroupsForUser => expect(getGroupsForUser).toEqual([])),
           mapTo(userIds)
         )
       }),
+      // --- user ID with group and specify role name that does exist but not assigned to this user
       concatMap(userIds => {
-        // --- user ID with group and specify correct role name
+        return roleService.getGroupsForUser({ userId: userIds.user2, role: 'superadmins' }).pipe(
+          tap(getGroupsForUser => expect(getGroupsForUser).toEqual([])),
+          mapTo(userIds)
+        )
+      }),
+      // --- user ID with group and specify correct role name
+      concatMap(userIds => {
         return roleService.getGroupsForUser({ userId: userIds.user2, role: 'admins' }).pipe(
           tap(getGroupsForUser => expect(getGroupsForUser).toEqual([ 'site-2' ])),
           mapTo(userIds)
@@ -201,7 +208,21 @@ describe('MongoRoleService', async () => {
       undefined,
       undefined,
       () => {
-        expect.assertions(11)
+        expect.assertions(12)
+        done()
+      }
+    )
+  })
+
+  test('findRoles()', done => {
+    createTestUsers$().pipe(
+      concatMap(() => roleService.findRoles({ project: { name: 1, _id: 0 } })),
+      tap(roles => expect(roles).toMatchSnapshot())
+    ).subscribe(
+      undefined,
+      undefined,
+      () => {
+        expect.assertions(8)
         done()
       }
     )

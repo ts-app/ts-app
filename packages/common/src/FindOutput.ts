@@ -3,5 +3,5 @@
  */
 export interface FindOutput<T, U = string> {
   docs: T[]
-  cursor: U
+  cursor?: U
 }

@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MongoService find() limit, paging with cursor 1`] = `
+Array [
+  Object {
+    "age": 14,
+    "name": "george",
+  },
+  Object {
+    "age": 14,
+    "name": "don",
+  },
+  Object {
+    "age": 25,
+    "name": "alan",
+  },
+  Object {
+    "age": 7,
+    "name": "faye",
+  },
+  Object {
+    "age": 18,
+    "name": "haley",
+  },
+]
+`;
+
+exports[`MongoService find() paging with sorting 1`] = `
+Array [
+  Object {
+    "age": 18,
+    "name": "haley",
+  },
+  Object {
+    "age": 14,
+    "name": "george",
+  },
+  Object {
+    "age": 7,
+    "name": "faye",
+  },
+]
+`;
+
+exports[`MongoService find() paging with sorting 2`] = `
+Array [
+  Object {
+    "age": 14,
+    "name": "don",
+  },
+  Object {
+    "age": 9,
+    "name": "chelsea",
+  },
+  Object {
+    "age": 13,
+    "name": "bobby",
+  },
+]
+`;
+
+exports[`MongoService find() paging with sorting 3`] = `
+Array [
+  Object {
+    "age": 12,
+    "name": "ali",
+  },
+  Object {
+    "age": 25,
+    "name": "alan",
+  },
+]
+`;
+
+exports[`MongoService find() paging with sorting 4`] = `Array []`;
+
+exports[`MongoService find() paging with sorting 5`] = `
+Array [
+  Object {
+    "age": 18,
+    "name": "haley",
+  },
+  Object {
+    "age": 14,
+    "name": "george",
+  },
+  Object {
+    "age": 7,
+    "name": "faye",
+  },
+]
+`;
+
+exports[`MongoService find() sort, query word starts/ends with 1`] = `
+Array [
+  Object {
+    "age": 7,
+    "name": "faye",
+  },
+  Object {
+    "age": 9,
+    "name": "chelsea",
+  },
+  Object {
+    "age": 12,
+    "name": "ali",
+  },
+  Object {
+    "age": 13,
+    "name": "bobby",
+  },
+  Object {
+    "age": 14,
+    "name": "don",
+  },
+  Object {
+    "age": 14,
+    "name": "george",
+  },
+  Object {
+    "age": 18,
+    "name": "haley",
+  },
+  Object {
+    "age": 25,
+    "name": "alan",
+  },
+]
+`;
+
+exports[`MongoService find() sort, query word starts/ends with 2`] = `
+Array [
+  Object {
+    "age": 25,
+    "name": "alan",
+  },
+  Object {
+    "age": 18,
+    "name": "haley",
+  },
+  Object {
+    "age": 14,
+    "name": "george",
+  },
+  Object {
+    "age": 14,
+    "name": "don",
+  },
+  Object {
+    "age": 13,
+    "name": "bobby",
+  },
+  Object {
+    "age": 12,
+    "name": "ali",
+  },
+  Object {
+    "age": 9,
+    "name": "chelsea",
+  },
+  Object {
+    "age": 7,
+    "name": "faye",
+  },
+]
+`;
+
+exports[`MongoService find() sort, query word starts/ends with 3`] = `
+Array [
+  Object {
+    "age": 13,
+    "name": "bobby",
+  },
+  Object {
+    "age": 18,
+    "name": "haley",
+  },
+]
+`;
+
+exports[`MongoService find() sort, query word starts/ends with 4`] = `
+Array [
+  Object {
+    "age": 7,
+    "name": "faye",
+  },
+]
+`;

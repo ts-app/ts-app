@@ -1,5 +1,6 @@
+import { omitVolatile, FindOutput, ConsoleLogService } from '@ts-app/common'
 import { MongoService } from '../src'
-import { catchError, concatMap, map, mapTo } from 'rxjs/operators'
+import { catchError, concatMap, map, mapTo, tap, toArray } from 'rxjs/operators'
 import { of } from 'rxjs'
 
 /* tslint:disable:rxjs-no-unsafe-scope */
@@ -7,8 +8,33 @@ describe('MongoService', async () => {
   const localUrl = 'mongodb://localhost:27017'
   let mongoService: MongoService
 
+  type TestData = {
+    id: string
+    name: string
+    age: number
+  }
+
+  const createTestData$ = () => {
+    const data = [
+      { name: 'ali', age: 12 },
+      { name: 'bobby', age: 13 },
+      { name: 'chelsea', age: 9 },
+      { name: 'george', age: 14 },
+      { name: 'don', age: 14 },
+      { name: 'alan', age: 25 },
+      { name: 'faye', age: 7 },
+      { name: 'haley', age: 18 }
+    ]
+
+    // --- create test data
+    return of(...data).pipe(
+      concatMap(user => mongoService.create('test', user)),
+      toArray()
+    )
+  }
+
   beforeEach(done => {
-    mongoService = new MongoService(localUrl)
+    mongoService = new MongoService(localUrl, new ConsoleLogService())
     mongoService.dropCollection('test').pipe(
       // just ignore if cannot drop
       catchError(() => {
@@ -142,5 +168,151 @@ describe('MongoService', async () => {
           done()
         }
       )
+  })
+
+  test('find() sort, query word starts/ends with', done => {
+    // --- create test data
+    createTestData$().pipe(
+      // --- sort by age, name
+      concatMap(() => mongoService.find('test',
+        {
+          sort: [
+            { field: 'age', asc: true },
+            { field: 'name', asc: true }
+          ],
+          project: { _id: 0 }
+        }
+      )),
+      tap(val => expect(val.docs).toMatchSnapshot()),
+
+      // --- sort by age, name desc
+      concatMap(() => mongoService.find('test',
+        {
+          sort: [
+            { field: 'age', asc: false },
+            { field: 'name', asc: false }
+          ],
+          project: { _id: 0 }
+        }
+      )),
+      tap(val => expect(val.docs).toMatchSnapshot()),
+
+      // --- query word ends with
+      concatMap(() => mongoService.find('test',
+        {
+          q: 'y',
+          project: { _id: 0 }
+        },
+        [ 'name' ]
+      )),
+      tap(val => expect(val.docs).toMatchSnapshot()),
+
+      // --- query word starts with
+      concatMap(() => mongoService.find('test',
+        {
+          q: 'f',
+          project: { _id: 0 }
+        },
+        [ 'name' ]
+      )),
+      tap(val => expect(val.docs).toMatchSnapshot())
+    ).subscribe(
+      undefined,
+      undefined,
+      () => {
+        expect.assertions(4)
+        done()
+      }
+    )
+  })
+
+  test('find() limit, paging with cursor', done => {
+    // --- get page 1
+    createTestData$().pipe(
+      // --- limit page 1 to 3 documents
+      concatMap(() => mongoService.find<TestData>('test',
+        {
+          limit: 3
+        }
+      )),
+      map(val => {
+        expect(val.docs.length).toBe(3)
+        expect(val.cursor.length > 0).toBeTruthy()
+        return val.cursor
+      }),
+
+      // --- get page 2 (with all results)
+      concatMap(cursor => mongoService.find<TestData>('test',
+        {
+          limit: 100,
+          cursor,
+          project: { _id: 0 }
+        })),
+      tap(val => expect(val.docs).toMatchSnapshot())
+    ).subscribe(
+      undefined,
+      undefined,
+      () => {
+        expect.assertions(3)
+        done()
+      }
+    )
+  })
+
+  test('find() paging with sorting', done => {
+    const removeIdFromDocs = (docs: FindOutput<TestData>) => ({
+      ...docs,
+      docs: docs.docs.map(doc => omitVolatile(doc))
+    })
+
+    const sort = [
+      { field: 'name', asc: false }
+    ]
+
+    createTestData$().pipe(
+      // --- paging with sorting
+      concatMap(() => mongoService.find<TestData>('test', {
+        limit: 3, sort
+      })),
+      tap(find => {
+        expect(removeIdFromDocs(find).docs).toMatchSnapshot()
+        expect(find.cursor.length > 0).toBeTruthy()
+      }),
+      concatMap(find => mongoService.find<TestData>('test', {
+        limit: 3, sort,
+        cursor: find.cursor
+      })),
+      tap(find => {
+        expect(removeIdFromDocs(find).docs).toMatchSnapshot()
+        expect(find.cursor.length > 0).toBeTruthy()
+      }),
+      concatMap(find => mongoService.find<TestData>('test', {
+        limit: 3, sort,
+        cursor: find.cursor
+      })),
+      tap(find => {
+        expect(removeIdFromDocs(find).docs).toMatchSnapshot()
+        expect(find.cursor.length > 0).toBeTruthy()
+      }),
+      concatMap(find => mongoService.find<TestData>('test', {
+        limit: 3, sort,
+        cursor: find.cursor
+      })),
+      tap(find => {
+        expect(removeIdFromDocs(find).docs).toMatchSnapshot()
+        expect(find.cursor.length).toBe(0)
+      }),
+      concatMap(find => mongoService.find<TestData>('test', {
+        limit: 3, sort,
+        cursor: 'bad cursor should start from the top'
+      })),
+      tap(find => {
+        expect(removeIdFromDocs(find).docs).toMatchSnapshot()
+        expect(find.cursor.length > 0).toBeTruthy()
+      })
+    ).subscribe(() => {
+      expect.assertions(10)
+      done()
+    })
   })
 })

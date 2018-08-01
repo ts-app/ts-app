@@ -1,10 +1,17 @@
-import { FindInput, FindOutput, LogService } from '@ts-app/common'
+import {
+  FindInput,
+  FindOutput,
+  LogService,
+  serialize,
+  deserialize,
+  escapeRegex,
+  assert
+} from '@ts-app/common'
 import { Observable, from, of, throwError } from 'rxjs'
 import {
   Collection, Cursor, Db, DeleteWriteOpResultObject, FindOneOptions, MongoClient, ObjectId
 } from 'mongodb'
 import { concatMap, map, mapTo } from 'rxjs/operators'
-import { escapeRegex } from '../../common/dist'
 
 /**
  * Returns an object where read/write to "id" property is mapped to Mongo's Object ID.
@@ -160,13 +167,42 @@ export class MongoService {
   findWithCursor<T> (
     collectionName: string, filter: object, limit: number = 10, cursor?: string,
     sort?: { field: string, asc: boolean }[], project?: object): Observable<FindOutput<T>> {
+
     return this.collection(collectionName).pipe(
       concatMap((collection: Collection) => {
+
         let filterWithCursor = filter
         if (cursor) {
-          filterWithCursor = {
-            ...filterWithCursor,
-            _id: { $gt: new ObjectId(cursor) }
+          const decodedCursor = this.decodeCursor(cursor)
+
+          if (decodedCursor.id && decodedCursor.sort && decodedCursor.sort.length > 0) {
+            // filter cursor based on sorted columns
+            assert(decodedCursor.sort.length < 2, 'Cursor based pagination only supports sorting by one column')
+
+            const cursorSort = decodedCursor.sort[ 0 ]
+            filterWithCursor = {
+              ...filterWithCursor,
+              $or: [
+                {
+                  [ cursorSort.field ]: {
+                    [ cursorSort.asc ? '$gt' : '$lt' ]: cursorSort.value
+                  }
+                },
+                {
+                  [ cursorSort.field ]: cursorSort.value,
+                  _id: {
+                    $gt: new ObjectId(decodedCursor.id)
+                  }
+                }
+              ]
+            }
+
+          } else if (decodedCursor.id) {
+            // filter cursor based on _id
+            filterWithCursor = {
+              ...filterWithCursor,
+              _id: { $gt: new ObjectId(decodedCursor.id) }
+            }
           }
         }
 
@@ -176,11 +212,14 @@ export class MongoService {
 
         // sort is parsed before passing to sort()
         if (sort) {
-          const sortObject = sort.reduce((acc, current) => {
+          let sortObject = sort.reduce((acc, current) => {
             acc[ current.field ] = current.asc ? 1 : -1
             return acc
           }, {} as any)
-          mongoCursor = mongoCursor.sort(sortObject)
+          mongoCursor = mongoCursor.sort({
+            ...sortObject,
+            _id: 1
+          })
         }
 
         // project is passed directly to Mongo
@@ -190,9 +229,9 @@ export class MongoService {
 
         this.debug({
           filterWithCursor,
-          sort,
+          limit,
           project,
-          limit
+          sort
         })
 
         return mongoCursor.toArray()
@@ -202,25 +241,62 @@ export class MongoService {
         const lastDoc = mongoDocs.length > 0 ? mongoDocs[ mongoDocs.length - 1 ] : null
 
         return {
-          cursor: lastDoc ? lastDoc.id : null,
+          cursor: lastDoc ? this.encodeCursor(lastDoc, sort) : '',
           docs: mongoDocs
         }
       })
     )
   }
 
-  find<T> (input: FindInput, collectionName: string, findBy: string[], defaultSort?: { field: string, asc: boolean }[]) {
+  private encodeCursor (lastDoc: any, sort: { field: string; asc: boolean }[] = []) {
+    const cursor = {
+      id: lastDoc.id,
+      sort: sort.map(item => ({
+        ...item,
+        // TODO: support dotted values
+        value: lastDoc[ item.field ]
+      }))
+    }
+    return serialize(cursor, { mode: 'compressToEncodedURIComponent' })
+  }
+
+  private decodeCursor (cursor: string): { id: string | null, sort: { field: string, value: any, asc: boolean }[] } {
+    try {
+      return deserialize(cursor, { mode: 'decompressToEncodedURIComponent' })
+    } catch (e) {
+      this.error('Error decoding cursor', e)
+      return {
+        id: null,
+        sort: []
+      }
+    }
+  }
+
+  find<T> (collectionName: string, input: FindInput, findBy?: string[], defaultSort?: { field: string, asc: boolean }[]) {
     let filter = {}
     let { sort } = input
     const { q, limit, cursor, project } = input
-    if (q && q.trim().length > 0) {
+    if (q && q.trim().length > 0 && findBy && findBy.length > 0) {
       filter = {
+        // why "input.q!"?
+        // reason: https://github.com/cartant/rxjs-tslint-rules/issues/54
         $or: [
-          ...[ findBy.map(name => {
-            // why "input.q!"?
-            // reason: https://github.com/cartant/rxjs-tslint-rules/issues/54
-            return { [ name ]: { $regex: `^${escapeRegex(input.q!)}`, $options: 'i' } }
-          }) ]
+          // starts with...
+          ...findBy.map(name => {
+            return {
+              [ name ]: {
+                $regex: `^${escapeRegex(input.q!)}`, $options: 'i'
+              }
+            }
+          }),
+          // ends with...
+          ...findBy.map(name => {
+            return {
+              [ name ]: {
+                $regex: `${escapeRegex(input.q!)}$`, $options: 'i'
+              }
+            }
+          })
         ]
       }
     }
@@ -228,7 +304,7 @@ export class MongoService {
     // if sort is not specified in input, determine default sort
     // if default sort is not specified, derive from first findBy field
     if (!sort) {
-      if (!defaultSort && findBy.length > 0) {
+      if (!defaultSort && findBy && findBy.length > 0) {
         defaultSort = [ { field: findBy[ 0 ], asc: true } ]
       }
       sort = defaultSort
@@ -246,6 +322,12 @@ export class MongoService {
   private debug (message: string | object) {
     if (this.logService) {
       this.logService.debug(message)
+    }
+  }
+
+  private error (message: string, error?: any) {
+    if (this.logService) {
+      this.logService.error(message, error)
     }
   }
 }

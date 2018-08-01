@@ -237,7 +237,7 @@ describe('MongoService', async () => {
       )),
       map(val => {
         expect(val.docs.length).toBe(3)
-        expect(val.cursor.length > 0).toBeTruthy()
+        expect(val.cursor).toBeTruthy()
         return val.cursor
       }),
 
@@ -300,7 +300,7 @@ describe('MongoService', async () => {
       })),
       tap(find => {
         expect(removeIdFromDocs(find).docs).toMatchSnapshot()
-        expect(find.cursor.length).toBe(0)
+        expect(find.cursor).toBeFalsy()
       }),
       concatMap(find => mongoService.find<TestData>('test', {
         limit: 3, sort,

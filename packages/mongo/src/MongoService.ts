@@ -239,10 +239,13 @@ export class MongoService {
       map(docs => {
         const mongoDocs = docs.map(doc => toMongoDoc(doc))
         const lastDoc = mongoDocs.length > 0 ? mongoDocs[ mongoDocs.length - 1 ] : null
-
-        return {
-          cursor: lastDoc ? this.encodeCursor(lastDoc, sort) : '',
-          docs: mongoDocs
+        if (lastDoc && lastDoc._id) {
+          return {
+            cursor: this.encodeCursor(lastDoc, sort),
+            docs: mongoDocs
+          }
+        } else {
+          return { docs: mongoDocs }
         }
       })
     )

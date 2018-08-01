@@ -3,7 +3,6 @@
     "init": "sh ./scripts/init.sh",
     "reset": "sh ./scripts/reset.sh",
     "develop": "sh ./scripts/develop.sh",
-    "precommit": "lerna run test",
     "prepush": "lerna run lint && lerna run test"
   },
   "author": "kctang@big2.net",

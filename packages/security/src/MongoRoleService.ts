@@ -1,5 +1,5 @@
 import { MongoService } from '@ts-app/mongo'
-import { assert, escapeRegex, FindInput, FindOutput, User, makeTimestampable } from '@ts-app/common'
+import { assert, FindInput, FindOutput, User, makeTimestampable } from '@ts-app/common'
 import { Observable, of, throwError, from } from 'rxjs'
 import { concatMap, mapTo, tap, map, toArray, defaultIfEmpty } from 'rxjs/operators'
 import { RoleService } from './RoleService'
@@ -56,7 +56,7 @@ export class MongoRoleService extends RoleService {
   }
 
   findRoles (input: FindInput): Observable<FindOutput<Role>> {
-    return this.mongoService.find(input, 'roles', [ 'name' ])
+    return this.mongoService.find('roles', input, [ 'name' ])
   }
 
   getGroupsForUser (input: { userId: string; role?: string }): Observable<string[]> {

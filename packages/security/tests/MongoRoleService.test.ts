@@ -216,13 +216,52 @@ describe('MongoRoleService', async () => {
 
   test('findRoles()', done => {
     createTestUsers$().pipe(
-      concatMap(() => roleService.findRoles({ project: { name: 1, _id: 0 } })),
-      tap(roles => expect(roles).toMatchSnapshot())
+      // --- simple find
+      concatMap(() => roleService.findRoles({
+        project: { name: 1, _id: 0 }
+      })),
+      tap(roles => expect(roles).toMatchSnapshot()),
+      // --- find with query (ends with)
+      concatMap(() => roleService.findRoles({
+        q: 'INs',
+        project: { name: 1, _id: 0 }
+      })),
+      tap(roles => expect(roles).toMatchSnapshot()),
+      // --- find with query (starts with)
+      concatMap(() => roleService.findRoles({
+        q: 'memb',
+        project: { name: 1, _id: 0 }
+      })),
+      tap(roles => expect(roles).toMatchSnapshot()),
+      // --- find with cursor
+      concatMap(() => roleService.findRoles({
+        limit: 3
+      })),
+      tap(roles => {
+        // has cursor and three docs
+        expect(roles.cursor).toBeTruthy()
+        expect(roles.docs.length).toBe(3)
+      }),
+      concatMap(roles => {
+        return roleService.findRoles({
+          cursor: roles.cursor,
+          limit: 2
+        })
+      }),
+      tap(roles => {
+        expect(roles.cursor).toBeTruthy()
+        expect(roles.docs.length).toBe(2)
+      }),
+      concatMap(roles => roleService.findRoles({ cursor: roles.cursor })),
+      tap(roles => {
+        expect(roles.cursor).toBeFalsy()
+        expect(roles.docs.length).toBe(0)
+      })
     ).subscribe(
       undefined,
       undefined,
       () => {
-        expect.assertions(8)
+        expect.assertions(16)
         done()
       }
     )

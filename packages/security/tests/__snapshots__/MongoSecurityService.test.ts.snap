@@ -96,44 +96,37 @@ Array [
 `;
 
 exports[`MongoSecurityService find users 2`] = `
-Object {
-  "cursor": undefined,
-  "docs": Array [
-    Object {
-      "profile": Object {
-        "displayName": "dan",
-      },
+Array [
+  Object {
+    "profile": Object {
+      "displayName": "dan",
     },
-    Object {
-      "profile": Object {
-        "displayName": "edwin",
-      },
+  },
+  Object {
+    "profile": Object {
+      "displayName": "edwin",
     },
-  ],
-}
+  },
+]
 `;
 
 exports[`MongoSecurityService find users 3`] = `
-Object {
-  "cursor": undefined,
-  "docs": Array [
-    Object {
-      "profile": Object {
-        "displayName": "edwin",
-      },
+Array [
+  Object {
+    "profile": Object {
+      "displayName": "edwin",
     },
-    Object {
-      "profile": Object {
-        "displayName": "dan",
-      },
+  },
+  Object {
+    "profile": Object {
+      "displayName": "dan",
     },
-  ],
-}
+  },
+]
 `;
 
 exports[`MongoSecurityService remove user 1`] = `
 Object {
-  "cursor": null,
   "docs": Array [],
 }
 `;

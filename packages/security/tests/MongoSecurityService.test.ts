@@ -117,7 +117,7 @@ describe('MongoSecurityService', async () => {
           _id: 0
         }
       })),
-      tap(val => expect(val).toMatchSnapshot()),
+      tap(val => expect(val.docs).toMatchSnapshot()),
       // --- find users name that starts/ends with 'n', sort decending
       concatMap(() => securityService.users({
         q: 'n',
@@ -129,7 +129,7 @@ describe('MongoSecurityService', async () => {
           _id: 0
         }
       })),
-      tap(val => expect(val).toMatchSnapshot())
+      tap(val => expect(val.docs).toMatchSnapshot())
     ).subscribe(() => {
       expect.assertions(3)
       done()

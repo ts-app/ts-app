@@ -442,7 +442,6 @@ Object {
 
 exports[`MongoRoleService findRoles() 8`] = `
 Object {
-  "cursor": undefined,
   "docs": Array [
     Object {
       "name": "admins",
@@ -458,6 +457,29 @@ Object {
     },
     Object {
       "name": "users-two",
+    },
+  ],
+}
+`;
+
+exports[`MongoRoleService findRoles() 9`] = `
+Object {
+  "docs": Array [
+    Object {
+      "name": "admins",
+    },
+    Object {
+      "name": "superadmins",
+    },
+  ],
+}
+`;
+
+exports[`MongoRoleService findRoles() 10`] = `
+Object {
+  "docs": Array [
+    Object {
+      "name": "members",
     },
   ],
 }
@@ -861,7 +883,6 @@ Object {
 
 exports[`MongoRoleService removeRole() 8`] = `
 Object {
-  "cursor": undefined,
   "docs": Array [
     Object {
       "name": "admins",

@@ -1,7 +1,7 @@
 import { MongoService } from '@ts-app/mongo'
 import { assert, FindInput, FindOutput, User, makeTimestampable } from '@ts-app/common'
-import { Observable, of, throwError, from } from 'rxjs'
-import { concatMap, mapTo, tap, map, toArray, defaultIfEmpty } from 'rxjs/operators'
+import { Observable, of, throwError } from 'rxjs'
+import { concatMap, mapTo, map, catchError } from 'rxjs/operators'
 import { RoleService } from './RoleService'
 import { Role } from './Role'
 import { ObjectId } from 'bson'
@@ -60,15 +60,14 @@ export class MongoRoleService extends RoleService {
   }
 
   getGroupsForUser (input: { userId: string; role?: string }): Observable<string[]> {
-    const { role, userId } = input
     let filter
-    if (role) {
+    if (input.role) {
       filter = {
-        _id: new ObjectId(userId),
-        'roles.role': role
+        _id: new ObjectId(input.userId),
+        'roles.role': input.role
       }
     } else {
-      filter = { _id: new ObjectId(userId) }
+      filter = { _id: new ObjectId(input.userId) }
     }
 
     return this.mongoService.get<User>('users', filter, {
@@ -78,10 +77,10 @@ export class MongoRoleService extends RoleService {
         if (!user) {
           // error if cannot find user, return empty array
           return of([])
-        } else if (role) {
+        } else if (input.role) {
           // return groups where user has specified role assigned (except global)
           const groupNames = user.roles
-            .filter(currentRole => currentRole.group !== RoleService.GLOBAL && currentRole.role === role)
+            .filter(currentRole => currentRole.group !== RoleService.GLOBAL && currentRole.role === input.role)
             .map(currentRole => currentRole.group)
 
           return of(Array.from(new Set(groupNames)))
@@ -97,13 +96,12 @@ export class MongoRoleService extends RoleService {
   }
 
   getRolesForUser (input: { userId: string; group?: string }): Observable<string[]> {
-    const { userId, group } = input
-    let filter: any = { _id: new ObjectId(userId) }
+    let filter: any = { _id: new ObjectId(input.userId) }
 
-    if (group) {
+    if (input.group) {
       filter = {
         ...filter,
-        'roles.group': { $in: [ RoleService.GLOBAL, group ] }
+        'roles.group': { $in: [ RoleService.GLOBAL, input.group ] }
       }
     }
 
@@ -113,7 +111,7 @@ export class MongoRoleService extends RoleService {
           // filter for global group
           // if group specified, filter by group
           const roles = user.roles
-            .filter(role => role.group === RoleService.GLOBAL || !group || role.group === group)
+            .filter(role => role.group === RoleService.GLOBAL || !input.group || role.group === input.group)
             .map(role => role.role)
 
           return Array.from(new Set(roles))
@@ -125,11 +123,47 @@ export class MongoRoleService extends RoleService {
   }
 
   getUsersInRoles (input: { roles: string[]; group?: string; limit?: number; cursor?: string }): Observable<FindOutput<User>> {
-    return undefined
+    let filter
+    if (input.group) {
+      filter = {
+        roles: {
+          $elemMatch: {
+            role: { $in: input.roles },
+            group: input.group
+          }
+        }
+      }
+    } else {
+      filter = {
+        'roles.role': { $in: input.roles }
+      }
+    }
+
+    return this.mongoService.findWithCursor<User>('users', filter,
+      input.limit, input.cursor, [ { field: 'profile.displayName', asc: true } ])
   }
 
   isUserInRoles (input: { userId: string; roles: string[]; group?: string }): Observable<boolean> {
-    return undefined
+    const filter = {
+      _id: new ObjectId(input.userId),
+      roles: {
+        $elemMatch: {
+          role: { $in: input.roles },
+          group: {
+            $in: input.group ? [ input.group, RoleService.GLOBAL ] : [ RoleService.GLOBAL ]
+          }
+        }
+      }
+    }
+
+    return this.mongoService.findWithCursor<User>('users', filter, 1).pipe(
+      map(users => users.docs.length > 0),
+      catchError(e => {
+        // whenever error happens, return as user not in role
+        console.error(`Error checking if user [${input.userId}] is in roles`, e)
+        return of(false)
+      })
+    )
   }
 
   removeRole (name: string): Observable<boolean> {
@@ -146,11 +180,52 @@ export class MongoRoleService extends RoleService {
   }
 
   removeUsersFromAllRoles (input: { userIds: string[] }): Observable<null> {
-    return undefined
+    const filter = {
+      _id: { $in: input.userIds.map(id => new ObjectId(id)) }
+    }
+    const update = {
+      $unset: {
+        roles: ''
+      }
+    }
+
+    return this.mongoService.collection('users').pipe(
+      concatMap(users => users.updateMany(filter, update)),
+      map(updateMany => {
+        if (updateMany.result.ok === 1) {
+          return null
+        } else {
+          throw new Error(`Error removing roles for users ${input.userIds}`)
+        }
+      })
+    )
   }
 
   removeUsersFromRoles (input: { userIds: string[]; roles: string[]; group?: string }): Observable<null> {
-    return undefined
-  }
+    if (input.group) {
+      return throwError('Unsupported input parameter [group] for removeUsersFromRoles()')
+    }
 
+    const filter = {
+      _id: { $in: input.userIds.map(id => new ObjectId(id)) }
+    }
+    const update = {
+      $pull: {
+        roles: {
+          role: { $in: input.roles }
+        }
+      }
+    }
+
+    return this.mongoService.collection('users').pipe(
+      concatMap(users => users.updateMany(filter, update)),
+      map(updateMany => {
+        if (updateMany.result.ok === 1) {
+          return null
+        } else {
+          throw new Error(`Error removing roles ${input.roles} for users ${input.userIds}`)
+        }
+      })
+    )
+  }
 }

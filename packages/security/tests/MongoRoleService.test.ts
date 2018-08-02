@@ -1,4 +1,4 @@
-import { ConsoleLogService, LogService, omitVolatile, User } from '@ts-app/common'
+import { omitVolatile, User } from '@ts-app/common'
 import { MongoService } from '@ts-app/mongo'
 import { of, forkJoin } from 'rxjs'
 import { catchError, concatMap, tap, toArray, mapTo, map } from 'rxjs/operators'
@@ -6,7 +6,6 @@ import { MongoRoleService, RoleService, MongoSecurityService, SecurityService } 
 
 describe('MongoRoleService', async () => {
   const localUrl = 'mongodb://localhost:27017'
-  let logService: LogService = new ConsoleLogService()
   let mongoService: MongoService
   let securityService: SecurityService
   let roleService: RoleService
@@ -79,8 +78,9 @@ describe('MongoRoleService', async () => {
             group: 'site-5'
           })),
           concatMap(() => roleService.addUsersToRoles({
-            userIds: [ superadmin ],
-            roles: [ 'superadmins' ]
+            userIds: [ user5, superadmin ],
+            roles: [ 'superadmins' ],
+            group: 'site-2'
           })),
           mapTo({ user1, user2, user3, user4, user5, admin, superadmin })
         )
@@ -138,9 +138,10 @@ describe('MongoRoleService', async () => {
       toArray(),
       tap(groupsForUser => expect(groupsForUser).toMatchSnapshot())
     ).subscribe(
-      undefined,
-      undefined,
-      () => done()
+      () => {
+        expect.assertions(8)
+        done()
+      }
     )
   })
 
@@ -204,8 +205,6 @@ describe('MongoRoleService', async () => {
         )
       })
     ).subscribe(
-      undefined,
-      undefined,
       () => {
         expect.assertions(12)
         done()
@@ -257,8 +256,6 @@ describe('MongoRoleService', async () => {
         expect(roles.docs.length).toBe(0)
       })
     ).subscribe(
-      undefined,
-      undefined,
       () => {
         expect.assertions(16)
         done()
@@ -266,7 +263,7 @@ describe('MongoRoleService', async () => {
     )
   })
 
-  test.only('getRolesForUser()', done => {
+  test('getRolesForUser()', done => {
     createTestUsers$().pipe(
       concatMap(userIds => forkJoin(
         // all user2 roles
@@ -291,6 +288,229 @@ describe('MongoRoleService', async () => {
       )),
       tap(roles => expect(roles).toMatchSnapshot())
     ).subscribe(() => {
+      expect.assertions(8)
+      done()
+    })
+  })
+
+  test('getUsersInRoles()', done => {
+    createTestUsers$().pipe(
+      concatMap(() => forkJoin(
+        // user-1, user-2, user-3, user-4, user-5
+        roleService.getUsersInRoles({
+          roles: [ 'members' ]
+        }),
+        // admin, superadmin, user-2
+        roleService.getUsersInRoles({
+          roles: [ 'admins' ]
+        }),
+        // user-2
+        roleService.getUsersInRoles({
+          roles: [ 'admins' ],
+          group: 'site-2'
+        }),
+        // admin, superadmin, user-2
+        roleService.getUsersInRoles({
+          roles: [ 'admins' ],
+          group: 'site-5'
+        }),
+        // empty - no cursor
+        roleService.getUsersInRoles({
+          roles: [ 'members' ],
+          group: 'site-2'
+        })
+      )),
+      tap(users => {
+        expect(users[ 0 ].cursor!.length).toBeTruthy()
+        expect(users[ 1 ].cursor!.length).toBeTruthy()
+        expect(users[ 2 ].cursor!.length).toBeTruthy()
+        expect(users[ 3 ].cursor!.length).toBeTruthy()
+
+        expect(users[ 0 ].docs.map(user => omitVolatileUser(user))).toMatchSnapshot()
+        expect(users[ 1 ].docs.map(user => omitVolatileUser(user))).toMatchSnapshot()
+        expect(users[ 2 ].docs.map(user => omitVolatileUser(user))).toMatchSnapshot()
+        expect(users[ 3 ].docs.map(user => omitVolatileUser(user))).toMatchSnapshot()
+
+        // no cursor, no user
+        expect(users[ 4 ]).toMatchSnapshot()
+      })
+    ).subscribe(() => {
+      expect.assertions(16)
+      done()
+    })
+  })
+
+  test('getUsersInRoles() multiple roles', done => {
+    createTestUsers$().pipe(
+      concatMap(() => roleService.getUsersInRoles({
+        roles: [ 'superadmins', 'admins' ],
+        group: 'site-2'
+      })),
+      tap(users => {
+        expect(users.docs.length).toBe(3)
+        expect(users.docs.map(doc => omitVolatileUser(doc))).toMatchSnapshot()
+      }),
+      concatMap(() => roleService.getUsersInRoles({
+        roles: [ 'superadmins', 'admins' ]
+      })),
+      tap(users => {
+        expect(users.docs.length).toBe(4)
+        expect(users.docs.map(doc => omitVolatileUser(doc))).toMatchSnapshot()
+      })
+    ).subscribe(() => {
+      expect.assertions(11)
+      done()
+    })
+  })
+
+  test('getUsersInRoles() paging', done => {
+    createTestUsers$().pipe(
+      // user-1, user-2
+      concatMap(() => roleService.getUsersInRoles({
+        roles: [ 'members' ], limit: 2
+      })),
+      tap(users => {
+        expect(users.cursor).toBeTruthy()
+        expect(users.docs.length).toBe(2)
+      }),
+      // user-3, user-4
+      concatMap(users => roleService.getUsersInRoles({
+        roles: [ 'members' ], limit: 2,
+        cursor: users.cursor
+      })),
+      tap(users => {
+        expect(users.cursor).toBeTruthy()
+        expect(users.docs.length).toBe(2)
+      }),
+      // user-5
+      concatMap(users => roleService.getUsersInRoles({
+        roles: [ 'members' ], limit: 2,
+        cursor: users.cursor
+      })),
+      tap(users => {
+        expect(users.cursor).toBeTruthy()
+        expect(users.docs.length).toBe(1)
+      }),
+      // empty docs
+      concatMap(users => roleService.getUsersInRoles({
+        roles: [ 'members' ], limit: 2,
+        cursor: users.cursor
+      })),
+      tap(users => {
+        expect(users.cursor).toBeFalsy()
+        expect(users.docs.length).toBe(0)
+      })
+    ).subscribe(() => {
+      expect.assertions(15)
+      done()
+    })
+  })
+
+  test('removeUsersFromRoles()', done => {
+    createTestUsers$().pipe(
+      concatMap(users => roleService.removeUsersFromRoles({
+        userIds: [ users.user1 ],
+        roles: [ 'members' ]
+      })),
+      concatMap(() => roleService.getUsersInRoles({ roles: [ 'members' ] })),
+      tap(val => {
+        const names = val.docs.map(doc => doc.profile.displayName)
+        expect(names).toEqual([ 'user-2', 'user-3', 'user-4', 'user-5' ])
+      })
+    ).subscribe(() => {
+      expect.assertions(8)
+      done()
+    })
+  })
+
+  test('removeUsersFromRoles() - multiple roles', done => {
+    createTestUsers$().pipe(
+      concatMap(users => forkJoin(
+        roleService.removeUsersFromRoles({
+          userIds: [ users.user2 ],
+          roles: [ 'members', 'superadmins' ]
+        }),
+        roleService.removeUsersFromRoles({
+          userIds: [ users.user2 ],
+          roles: [ 'admins' ]
+        })
+      ).pipe(mapTo(users))),
+      concatMap(users => roleService.getRolesForUser({ userId: users.user2 })),
+      tap(rolesForUser => expect(rolesForUser).toEqual([ 'users-two', 'users' ]))
+    ).subscribe(() => {
+      expect.assertions(8)
+      done()
+    })
+  })
+
+  test('removeUsersFromAllRoles()', done => {
+    createTestUsers$().pipe(
+      concatMap(users => forkJoin(
+        roleService.removeUsersFromAllRoles({
+          userIds: [ users.user2, users.user3 ]
+        }),
+        roleService.removeUsersFromAllRoles({
+          userIds: [ users.admin ]
+        })
+      ).pipe(mapTo(users))),
+      concatMap(users => roleService.getRolesForUser({ userId: users.user2 }).pipe(
+        tap(rolesForUser => expect(rolesForUser.length).toBe(0)),
+        mapTo(users)
+      )),
+      concatMap(users => roleService.getRolesForUser({ userId: users.user3 }).pipe(
+        tap(rolesForUser => expect(rolesForUser.length).toBe(0)),
+        mapTo(users)
+      )),
+      concatMap(users => roleService.getRolesForUser({ userId: users.admin }).pipe(
+        tap(rolesForUser => expect(rolesForUser.length).toBe(0)),
+        mapTo(users)
+      )),
+      concatMap(users => roleService.getRolesForUser({ userId: users.user1 }).pipe(
+        tap(rolesForUser => expect(rolesForUser).toEqual([ 'members' ]))
+      ))
+    ).subscribe(() => {
+      expect.assertions(11)
+      done()
+    })
+  })
+
+  test('isUserInRoles()', done => {
+    createTestUsers$().pipe(
+      concatMap(users => forkJoin([
+        roleService.isUserInRoles({
+          userId: users.user1,
+          roles: [ 'members' ]
+        }),
+        roleService.isUserInRoles({
+          userId: users.user1,
+          roles: [ 'admins' ]
+        }),
+        roleService.isUserInRoles({
+          userId: users.user1,
+          roles: [ 'members', 'admins' ]
+        }),
+        roleService.isUserInRoles({
+          userId: users.user2,
+          roles: [ 'admins' ],
+          group: 'site-2'
+        }),
+        roleService.isUserInRoles({
+          userId: users.user5,
+          roles: [ 'superadmins' ]
+        }),
+        roleService.isUserInRoles({
+          userId: users.user5,
+          roles: [ 'superadmins' ],
+          group: 'site-2'
+        }),
+        roleService.isUserInRoles({
+          userId: users.user2,
+          roles: [ 'admins' ],
+          group: 'site-2'
+        })
+      ]))
+    ).subscribe(val => {
+      expect(val).toEqual([ true, false, true, true, false, true, true ])
       expect.assertions(8)
       done()
     })

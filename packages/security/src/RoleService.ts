@@ -55,17 +55,15 @@ export abstract class RoleService {
   abstract getRolesForUser (input: { userId: string, group?: string }): Observable<string[]>
 
   /**
-   * Get users with specified role(s).
+   * Get users with specified role(s) and group. User is considered a match if at least one role
+   * matches.
    */
   abstract getUsersInRoles (input: { roles: string[], group?: string, limit?: number, cursor?: string }): Observable<FindOutput<User>>
 
   /**
    * Unassign user(s) from specified role(s).
    */
-  abstract removeUsersFromRoles (input: {
-    userIds: string[], roles: string[],
-    group?: string
-  }): Observable<null>
+  abstract removeUsersFromRoles (input: { userIds: string[], roles: string[], group?: string }): Observable<null>
 
   /**
    * Remove all assigned roles from specified user(s).

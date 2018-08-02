@@ -97,7 +97,31 @@ export class MongoRoleService extends RoleService {
   }
 
   getRolesForUser (input: { userId: string; group?: string }): Observable<string[]> {
-    return undefined
+    const { userId, group } = input
+    let filter: any = { _id: new ObjectId(userId) }
+
+    if (group) {
+      filter = {
+        ...filter,
+        'roles.group': { $in: [ RoleService.GLOBAL, group ] }
+      }
+    }
+
+    return this.mongoService.get<User>('users', filter, { fields: { roles: 1 } }).pipe(
+      map(user => {
+        if (user && user.roles) {
+          // filter for global group
+          // if group specified, filter by group
+          const roles = user.roles
+            .filter(role => role.group === RoleService.GLOBAL || !group || role.group === group)
+            .map(role => role.role)
+
+          return Array.from(new Set(roles))
+        } else {
+          return []
+        }
+      })
+    )
   }
 
   getUsersInRoles (input: { roles: string[]; group?: string; limit?: number; cursor?: string }): Observable<FindOutput<User>> {

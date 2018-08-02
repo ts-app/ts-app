@@ -175,6 +175,14 @@ Object {
       "group": "site-2",
       "role": "admins",
     },
+    Object {
+      "group": "site-5",
+      "role": "users",
+    },
+    Object {
+      "group": "site-5",
+      "role": "admins",
+    },
   ],
   "services": Object {
     "password": Object {},
@@ -314,7 +322,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 1`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 1`] = `
 Object {
   "emails": Array [
     Object {
@@ -332,7 +340,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 2`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 2`] = `
 Object {
   "emails": Array [
     Object {
@@ -350,7 +358,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 3`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 3`] = `
 Object {
   "emails": Array [
     Object {
@@ -368,7 +376,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 4`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 4`] = `
 Object {
   "emails": Array [
     Object {
@@ -386,7 +394,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 5`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 5`] = `
 Object {
   "emails": Array [
     Object {
@@ -404,7 +412,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 6`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 6`] = `
 Object {
   "emails": Array [
     Object {
@@ -422,7 +430,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 7`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 7`] = `
 Object {
   "emails": Array [
     Object {
@@ -440,7 +448,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 8`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 8`] = `
 Object {
   "docs": Array [
     Object {
@@ -462,7 +470,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 9`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 9`] = `
 Object {
   "docs": Array [
     Object {
@@ -475,7 +483,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService findRoles() 10`] = `
+exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 10`] = `
 Object {
   "docs": Array [
     Object {
@@ -616,6 +624,7 @@ Array [
   Array [],
   Array [
     "site-2",
+    "site-5",
   ],
   Array [],
   Array [],
@@ -753,6 +762,156 @@ Object {
     "password": Object {},
   },
 }
+`;
+
+exports[`MongoRoleService getRolesForUser() 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-1@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-1",
+    "email": "user-1@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getRolesForUser() 2`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-2@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-2",
+    "email": "user-2@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getRolesForUser() 3`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-3@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-3",
+    "email": "user-3@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getRolesForUser() 4`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-4@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-4",
+    "email": "user-4@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getRolesForUser() 5`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "user-5@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "user-5",
+    "email": "user-5@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getRolesForUser() 6`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "admin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "admin",
+    "email": "admin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getRolesForUser() 7`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "superadmin@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "superadmin",
+    "email": "superadmin@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
+exports[`MongoRoleService getRolesForUser() 8`] = `
+Array [
+  Array [
+    "members",
+    "users-two",
+    "admins",
+    "users",
+  ],
+  Array [
+    "members",
+  ],
+  Array [
+    "members",
+    "users-two",
+    "admins",
+  ],
+  Array [
+    "members",
+    "users",
+    "admins",
+  ],
+]
 `;
 
 exports[`MongoRoleService removeRole() 1`] = `

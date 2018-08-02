@@ -1,6 +1,6 @@
 import { ConsoleLogService, LogService, omitVolatile, User } from '@ts-app/common'
 import { MongoService } from '@ts-app/mongo'
-import { of } from 'rxjs'
+import { of, forkJoin } from 'rxjs'
 import { catchError, concatMap, tap, toArray, mapTo, map } from 'rxjs/operators'
 import { MongoRoleService, RoleService, MongoSecurityService, SecurityService } from '../src'
 
@@ -12,7 +12,6 @@ describe('MongoRoleService', async () => {
   let roleService: RoleService
 
   beforeEach(done => {
-
     mongoService = new MongoService(localUrl)
     securityService = new MongoSecurityService(mongoService)
     roleService = new MongoRoleService(mongoService)
@@ -75,7 +74,7 @@ describe('MongoRoleService', async () => {
             group: 'site-2'
           })),
           concatMap(() => roleService.addUsersToRoles({
-            userIds: [ admin, superadmin ],
+            userIds: [ user2, admin, superadmin ],
             roles: [ 'users', 'admins' ],
             group: 'site-5'
           })),
@@ -179,7 +178,7 @@ describe('MongoRoleService', async () => {
       // --- user ID with group but not specifying role
       concatMap(userIds => {
         return roleService.getGroupsForUser({ userId: userIds.user2 }).pipe(
-          tap(getGroupsForUser => expect(getGroupsForUser).toEqual([ 'site-2' ])),
+          tap(getGroupsForUser => expect(getGroupsForUser).toEqual([ 'site-2', 'site-5' ])),
           mapTo(userIds)
         )
       }),
@@ -200,7 +199,7 @@ describe('MongoRoleService', async () => {
       // --- user ID with group and specify correct role name
       concatMap(userIds => {
         return roleService.getGroupsForUser({ userId: userIds.user2, role: 'admins' }).pipe(
-          tap(getGroupsForUser => expect(getGroupsForUser).toEqual([ 'site-2' ])),
+          tap(getGroupsForUser => expect(getGroupsForUser).toEqual([ 'site-2', 'site-5' ])),
           mapTo(userIds)
         )
       })
@@ -214,7 +213,7 @@ describe('MongoRoleService', async () => {
     )
   })
 
-  test('findRoles()', done => {
+  test('findRoles() - simple, with query, with cursor & paging', done => {
     createTestUsers$().pipe(
       // --- simple find
       concatMap(() => roleService.findRoles({
@@ -265,5 +264,35 @@ describe('MongoRoleService', async () => {
         done()
       }
     )
+  })
+
+  test.only('getRolesForUser()', done => {
+    createTestUsers$().pipe(
+      concatMap(userIds => forkJoin(
+        // all user2 roles
+        roleService.getRolesForUser({
+          userId: userIds.user2
+        }),
+        // user2 global roles
+        roleService.getRolesForUser({
+          userId: userIds.user2,
+          group: RoleService.GLOBAL
+        }),
+        // user2 site-2 roles
+        roleService.getRolesForUser({
+          userId: userIds.user2,
+          group: 'site-2'
+        }),
+        // user2 site-5 roles
+        roleService.getRolesForUser({
+          userId: userIds.user2,
+          group: 'site-5'
+        })
+      )),
+      tap(roles => expect(roles).toMatchSnapshot())
+    ).subscribe(() => {
+      expect.assertions(8)
+      done()
+    })
   })
 })

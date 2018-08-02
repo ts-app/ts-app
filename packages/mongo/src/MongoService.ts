@@ -12,6 +12,7 @@ import {
   Collection, Cursor, Db, DeleteWriteOpResultObject, FindOneOptions, MongoClient, ObjectId
 } from 'mongodb'
 import { concatMap, map, mapTo } from 'rxjs/operators'
+import * as jp from 'jsonpath'
 
 /**
  * Returns an object where read/write to "id" property is mapped to Mongo's Object ID.
@@ -256,8 +257,7 @@ export class MongoService {
       id: lastDoc.id,
       sort: sort.map(item => ({
         ...item,
-        // TODO: support dotted values
-        value: lastDoc[ item.field ]
+        value: jp.value(lastDoc, item.field)
       }))
     }
     return serialize(cursor, { mode: 'compressToEncodedURIComponent' })

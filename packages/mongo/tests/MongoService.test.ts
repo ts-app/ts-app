@@ -1,4 +1,4 @@
-import { omitVolatile, FindOutput, ConsoleLogService } from '@ts-app/common'
+import { omitVolatile, FindOutput } from '@ts-app/common'
 import { MongoService } from '../src'
 import { catchError, concatMap, map, mapTo, tap, toArray } from 'rxjs/operators'
 import { of } from 'rxjs'
@@ -34,7 +34,7 @@ describe('MongoService', async () => {
   }
 
   beforeEach(done => {
-    mongoService = new MongoService(localUrl, new ConsoleLogService())
+    mongoService = new MongoService(localUrl)
     mongoService.dropCollection('test').pipe(
       // just ignore if cannot drop
       catchError(() => {
@@ -302,7 +302,8 @@ describe('MongoService', async () => {
         expect(removeIdFromDocs(find).docs).toMatchSnapshot()
         expect(find.cursor).toBeFalsy()
       }),
-      concatMap(find => mongoService.find<TestData>('test', {
+      // this should cause a 'Error decoding cursor' error log
+      concatMap(() => mongoService.find<TestData>('test', {
         limit: 3, sort,
         cursor: 'bad cursor should start from the top'
       })),

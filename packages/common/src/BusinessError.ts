@@ -1,9 +1,4 @@
 /**
- * This interface represents recoverable errors.
+ * Business error represented as a string value.
  */
-export interface BusinessError {
-  /**
-   * Business error message.
-   */
-  message: string
-}
+export type BusinessError = string

@@ -7,8 +7,4 @@ import { BusinessError } from './BusinessError'
  * @param {string} message
  * @return {Observable<{error: BusinessError}>}
  */
-export const ofBusinessError = (message: string): Observable<{ error: BusinessError }> => of({
-  error: {
-    message
-  }
-})
+export const ofBusinessError = (message: string): Observable<{ error: BusinessError }> => of({ error: message })

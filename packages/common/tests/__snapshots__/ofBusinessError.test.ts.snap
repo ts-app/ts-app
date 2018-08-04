@@ -2,8 +2,6 @@
 
 exports[`ofBusinessError works 1`] = `
 Object {
-  "error": Object {
-    "message": "bob",
-  },
+  "error": "bob",
 }
 `;

@@ -342,9 +342,7 @@ Object {
 
 exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 2`] = `
 Object {
-  "error": Object {
-    "message": "Invalid login attempt",
-  },
+  "error": "Invalid login attempt",
 }
 `;
 
@@ -386,16 +384,12 @@ Object {
 
 exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 5`] = `
 Object {
-  "error": Object {
-    "message": "User already exist",
-  },
+  "error": "User already exist",
 }
 `;
 
 exports[`MongoSecurityService user sign up with invalid email 1`] = `
 Object {
-  "error": Object {
-    "message": "Invalid email",
-  },
+  "error": "Invalid email",
 }
 `;

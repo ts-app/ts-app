@@ -6,9 +6,9 @@ import { LogService } from './LogService'
 export class ConsoleLogService extends LogService {
   error (message: string, error?: any): void {
     if (error) {
-      console.error(message)
-    } else {
       console.error(message, error)
+    } else {
+      console.error(message)
     }
   }
 

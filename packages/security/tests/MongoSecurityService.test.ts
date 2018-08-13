@@ -217,4 +217,13 @@ describe('MongoSecurityService', async () => {
       done()
     })
   })
+
+  test('user by email', done => {
+    createTestUsers$().pipe(
+      concatMap(() => securityService.userByEmail('dan@test.local')),
+      tap(dan => expect(omitVolatileUser(dan!)).toMatchSnapshot()),
+      concatMap(() => securityService.userByEmail('joe@test.local')),
+      tap(joe => expect(joe).toBeNull())
+    ).subscribe(() => done())
+  })
 })

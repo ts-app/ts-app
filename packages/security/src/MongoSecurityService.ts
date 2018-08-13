@@ -115,6 +115,18 @@ export class MongoSecurityService extends SecurityService {
     return this.mongoService.findWithCursor('users', filter, limit, cursor, sort, project)
   }
 
+  userByEmail (email: string): Observable<User | null> {
+    const filter = {
+      emails: {
+        $elemMatch: {
+          email
+        }
+      }
+    }
+
+    return this.mongoService.get<User>('users', filter)
+  }
+
   removeUser (id: string): Observable<null> {
     return this.mongoService.remove('users', id).pipe(mapTo(null))
   }

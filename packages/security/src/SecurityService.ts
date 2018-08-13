@@ -18,6 +18,8 @@ export abstract class SecurityService {
 
   abstract users (input: FindInput): Observable<FindOutput<User>>
 
+  abstract userByEmail (email: string): Observable<User | null>
+
   abstract removeUser (id: string): Observable<null>
 
   abstract seedUsers (input: {

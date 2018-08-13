@@ -322,6 +322,24 @@ Object {
 }
 `;
 
+exports[`MongoSecurityService user by email 1`] = `
+Object {
+  "emails": Array [
+    Object {
+      "email": "dan@test.local",
+      "verified": true,
+    },
+  ],
+  "profile": Object {
+    "displayName": "dan",
+    "email": "dan@test.local",
+  },
+  "services": Object {
+    "password": Object {},
+  },
+}
+`;
+
 exports[`MongoSecurityService user sign up & login with email/password (via bcrypt) 1`] = `
 Object {
   "emails": Array [

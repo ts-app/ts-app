@@ -25,10 +25,12 @@
     "@ts-app/common": "^0.1.2",
     "@ts-app/mongo": "^0.1.2",
     "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.3.0",
     "rxjs": "^6.2.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.1",
+    "@types/jsonwebtoken": "^7.2.8",
     "jest": "^23.1.0",
     "tslint": "^5.10.0",
     "typescript": "^2.9.2"

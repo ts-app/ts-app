@@ -2,17 +2,25 @@ import { omitVolatile, User } from '@ts-app/common'
 import { MongoService } from '@ts-app/mongo'
 import { of, forkJoin } from 'rxjs'
 import { catchError, concatMap, tap, toArray, mapTo, map } from 'rxjs/operators'
-import { MongoRoleService, RoleService, MongoSecurityService, SecurityService } from '../src'
+import {
+  MongoRoleService,
+  RoleService,
+  MongoSecurityService,
+  SecurityService,
+  TokenService, InMemoryUserRefreshTokenRepository
+} from '../src'
 
 describe('MongoRoleService', async () => {
   const localUrl = 'mongodb://localhost:27017'
+  const tokenService = new TokenService('test-key', 'test-key')
+  const tokenRepository = new InMemoryUserRefreshTokenRepository()
   let mongoService: MongoService
   let securityService: SecurityService
   let roleService: RoleService
 
   beforeEach(done => {
     mongoService = new MongoService(localUrl)
-    securityService = new MongoSecurityService(mongoService)
+    securityService = new MongoSecurityService(mongoService, tokenService, tokenRepository)
     roleService = new MongoRoleService(mongoService)
     of('users', 'roles').pipe(
       concatMap(collection => mongoService.dropCollection(collection)),

@@ -14,9 +14,13 @@ import {
 } from '@ts-app/common'
 import { MongoService } from '@ts-app/mongo'
 import { concatMap, map, mapTo, toArray } from 'rxjs/operators'
+import { TokenService } from './TokenService'
+import { UserRefreshTokenRepository } from './UserRefreshTokenRepository'
 
 export class MongoSecurityService extends SecurityService {
-  constructor (private mongoService: MongoService) {
+  constructor (private mongoService: MongoService,
+               private tokenService: TokenService,
+               private userRefreshTokenRepository: UserRefreshTokenRepository) {
     super()
   }
 
@@ -80,11 +84,35 @@ export class MongoSecurityService extends SecurityService {
       }),
       concatMap<{ passwordMatch: boolean, user: User }, { user: User }>(({ passwordMatch, user }) => {
         if (passwordMatch) {
-          return of({ user })
+          return this.generateAndRegisterToken(user)
         } else {
           return ofBusinessError('Invalid login attempt')
         }
       })
+    )
+  }
+
+  /**
+   * User login via refresh token.
+   */
+  loginWithRefreshToken (refreshToken: string): Observable<{ user?: User; accessToken?: string; refreshToken?: string }> {
+    return of(null).pipe(
+      // --- make sure refresh token is valid and has not expired
+      map(() => this.tokenService.verify(refreshToken)),
+      // --- make sure token is registered in repository
+      concatMap(decodedToken => this.userRefreshTokenRepository.getTokens(decodedToken.userId).pipe(
+        concatMap(userTokens => userTokens.has(refreshToken) ?
+          of(decodedToken) :
+          throwError('Refresh token is not registered or has been revoked.'))
+      )),
+      // --- load user based on token's user ID
+      concatMap(decodedToken => this.mongoService.get<User>('users', decodedToken.userId).pipe(
+        concatMap(user => user ? of(user) :
+          throwError(`User [${decodedToken.userId}] does not exist`)
+        )
+      )),
+      // --- generate new access token & refresh token for user, and update user token repository
+      concatMap(user => this.generateAndRegisterToken(user))
     )
   }
 
@@ -191,6 +219,25 @@ export class MongoSecurityService extends SecurityService {
         }
 
         return this.mongoService.dropCollection('users').pipe(mapTo(null))
+      })
+    )
+  }
+
+  private makeTokenPayload (user: User) {
+    return {
+      emails: user.emails,
+      profile: user.profile,
+      roles: user.roles
+    }
+  }
+
+  private generateAndRegisterToken (user: User) {
+    const newToken = this.tokenService.generateUserToken(user.id, this.makeTokenPayload(user))
+    return this.userRefreshTokenRepository.register(user.id, newToken.refreshToken).pipe(
+      mapTo({
+        user,
+        accessToken: newToken.accessToken,
+        refreshToken: newToken.refreshToken
       })
     )
   }

@@ -2,10 +2,17 @@ import { omitVolatile, User } from '@ts-app/common'
 import { MongoService } from '@ts-app/mongo'
 import { of } from 'rxjs'
 import { catchError, concatMap, tap, mergeMap, toArray, mapTo } from 'rxjs/operators'
-import { MongoSecurityService, SecurityService } from '../src'
+import {
+  InMemoryUserRefreshTokenRepository,
+  MongoSecurityService,
+  SecurityService,
+  TokenService
+} from '../src'
 
 describe('MongoSecurityService', async () => {
   const localUrl = 'mongodb://localhost:27017'
+  const tokenService = new TokenService('test-key', 'test-key')
+  const tokenRepository = new InMemoryUserRefreshTokenRepository()
   let mongoService: MongoService
   let securityService: SecurityService
 
@@ -35,7 +42,7 @@ describe('MongoSecurityService', async () => {
 
   beforeEach(done => {
     mongoService = new MongoService(localUrl)
-    securityService = new MongoSecurityService(mongoService)
+    securityService = new MongoSecurityService(mongoService, tokenService, tokenRepository)
     of('users').pipe(
       concatMap(collection => mongoService.dropCollection(collection)),
       catchError(e => {
@@ -72,9 +79,14 @@ describe('MongoSecurityService', async () => {
       // --- good login
       concatMap(() => securityService.loginWithEmailPassword(emailPassword)),
       tap(login => {
-        // TODO: assert tokens
         expect(login.error).toBeFalsy()
         expect(omitVolatileUser(login.user!)).toMatchSnapshot()
+
+        // --- has access & refresh tokens
+        const verifiedAccessToken = tokenService.verify(login.accessToken!)
+        const verifiedRefreshToken = tokenService.verify(login.refreshToken!)
+        expect(verifiedAccessToken.userId.length).toBe(24)
+        expect(verifiedRefreshToken.userId.length).toBe(24)
       }),
 
       concatMap(login => securityService.user(login.user!.id)),
@@ -84,7 +96,7 @@ describe('MongoSecurityService', async () => {
       concatMap(() => securityService.signUp(emailPassword)),
       tap(signUp => expect(signUp).toMatchSnapshot())
     ).subscribe(() => {
-      expect.assertions(8)
+      expect.assertions(10)
       done()
     })
   })

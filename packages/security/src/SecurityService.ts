@@ -14,6 +14,12 @@ export abstract class SecurityService {
     error?: BusinessError
   }>
 
+  abstract loginWithRefreshToken (refreshToken: string): Observable<{
+    user?: User
+    accessToken?: string
+    refreshToken?: string
+  }>
+
   abstract user (id: string): Observable<User | null>
 
   abstract users (input: FindInput): Observable<FindOutput<User>>

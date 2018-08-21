@@ -1,13 +1,6 @@
 import * as crypto from 'crypto'
 import * as jwt from 'jsonwebtoken'
 
-type VerifyPayload = {
-  payload: any
-  userId: string
-  exp: number
-  iat: number
-  jti: number
-}
 type GenerateOptions = {
   secretOrPrivateKey?: string
   accessTokenExpiresIn?: string
@@ -15,6 +8,28 @@ type GenerateOptions = {
 }
 type VerifyOptions = {
   secretOrPublicKey?: string
+}
+
+export type DecodedToken = {
+  exp: number
+  iat: number
+  jti: string
+  userId: string
+  payload: {
+    emails: {
+      email: string
+      verified: boolean
+    }[]
+    profile: {
+      email: string
+      displayName: string
+      avatarUrl?: string
+    }
+    roles: {
+      role: string
+      group: string
+    }[]
+  }
 }
 
 export class TokenService {
@@ -44,7 +59,7 @@ export class TokenService {
   }
 
   verify (token: string, options: VerifyOptions = {}) {
-    return jwt.verify(token, options.secretOrPublicKey || this.secretOrPublicKey) as VerifyPayload
+    return jwt.verify(token, options.secretOrPublicKey || this.secretOrPublicKey) as DecodedToken
   }
 
   private uuid () {

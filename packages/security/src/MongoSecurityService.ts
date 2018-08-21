@@ -50,9 +50,10 @@ export class MongoSecurityService extends SecurityService {
                 profile: {
                   email: input.email,
                   displayName: input.email.substr(0, input.email.indexOf('@'))
-                }
+                },
+                roles: []
               })
-              return this.mongoService.create('users', makeUser(bcrypt))
+              return this.mongoService.create<User>('users', makeUser(bcrypt))
             }),
             concatMap(id => this.mongoService.get('users', id)),
             map(user => user ? { user: user } : { error: `Error loading user [${input.email}]` })

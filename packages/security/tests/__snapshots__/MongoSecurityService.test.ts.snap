@@ -13,6 +13,7 @@ Array [
       "displayName": "bob",
       "email": "bob@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -28,6 +29,7 @@ Array [
       "displayName": "cat",
       "email": "cat@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -43,6 +45,7 @@ Array [
       "displayName": "dan",
       "email": "dan@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -58,6 +61,7 @@ Array [
       "displayName": "david",
       "email": "david@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -73,6 +77,7 @@ Array [
       "displayName": "edwin",
       "email": "edwin@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -88,6 +93,7 @@ Array [
       "displayName": "faye",
       "email": "faye@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -144,6 +150,7 @@ Array [
       "displayName": "admin",
       "email": "admin@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -159,6 +166,7 @@ Array [
       "displayName": "user1",
       "email": "user1@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -174,6 +182,7 @@ Array [
       "displayName": "user10",
       "email": "user10@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -189,6 +198,7 @@ Array [
       "displayName": "user2",
       "email": "user2@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -204,6 +214,7 @@ Array [
       "displayName": "user3",
       "email": "user3@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -219,6 +230,7 @@ Array [
       "displayName": "user4",
       "email": "user4@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -234,6 +246,7 @@ Array [
       "displayName": "user5",
       "email": "user5@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -249,6 +262,7 @@ Array [
       "displayName": "user6",
       "email": "user6@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -264,6 +278,7 @@ Array [
       "displayName": "user7",
       "email": "user7@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -279,6 +294,7 @@ Array [
       "displayName": "user8",
       "email": "user8@test.local",
     },
+    "roles": Array [],
     "services": Object {
       "password": Object {},
     },
@@ -298,6 +314,7 @@ Object {
     "displayName": "bob",
     "email": "bob@test.local",
   },
+  "roles": Array [],
   "services": Object {
     "password": Object {},
   },
@@ -316,6 +333,7 @@ Object {
     "displayName": "Bobby",
     "email": "bob@test.local",
   },
+  "roles": Array [],
   "services": Object {
     "password": Object {},
   },
@@ -334,6 +352,7 @@ Object {
     "displayName": "dan",
     "email": "dan@test.local",
   },
+  "roles": Array [],
   "services": Object {
     "password": Object {},
   },
@@ -352,6 +371,7 @@ Object {
     "displayName": "test",
     "email": "test@test.com",
   },
+  "roles": Array [],
   "services": Object {
     "password": Object {},
   },
@@ -376,6 +396,7 @@ Object {
     "displayName": "test",
     "email": "test@test.com",
   },
+  "roles": Array [],
   "services": Object {
     "password": Object {},
   },
@@ -394,6 +415,7 @@ Object {
     "displayName": "test",
     "email": "test@test.com",
   },
+  "roles": Array [],
   "services": Object {
     "password": Object {},
   },

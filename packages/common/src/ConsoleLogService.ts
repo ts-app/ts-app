@@ -12,7 +12,7 @@ export class ConsoleLogService extends LogService {
     }
   }
 
-  log (message: string): void {
+  log (message: string | object): void {
     if (typeof message === 'string') {
       console.log(message)
     } else {

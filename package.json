@@ -1,9 +1,12 @@
 {
   "scripts": {
-    "init": "sh ./scripts/init.sh",
-    "reset": "sh ./scripts/reset.sh",
+    "clean": "lerna run clean",
+    "compile": "lerna run compile",
     "develop": "sh ./scripts/develop.sh",
-    "prepush": "lerna run lint && lerna run test"
+    "init": "sh ./scripts/init.sh",
+    "prepush": "lerna run lint && lerna run test",
+    "publish": "npm run clean && npm run compile && npm run prepush && lerna publish",
+    "reset": "sh ./scripts/reset.sh"
   },
   "author": "kctang@big2.net",
   "license": "MIT",

@@ -175,41 +175,43 @@ export class MongoService {
         let filterWithCursor = filter
         if (cursor) {
           const decodedCursor = this.decodeCursor(cursor)
-
           if (decodedCursor.id && decodedCursor.sort && decodedCursor.sort.length > 0) {
             // filter cursor based on sorted columns
             assert(decodedCursor.sort.length < 2, 'Cursor based pagination only supports sorting by one column')
 
             const cursorSort = decodedCursor.sort[ 0 ]
             filterWithCursor = {
-              ...filterWithCursor,
-              $or: [
+              $and: [
+                filterWithCursor,
                 {
-                  [ cursorSort.field ]: {
-                    [ cursorSort.asc ? '$gt' : '$lt' ]: cursorSort.value
-                  }
-                },
-                {
-                  [ cursorSort.field ]: cursorSort.value,
-                  _id: {
-                    $gt: new ObjectId(decodedCursor.id)
-                  }
+                  $or: [
+                    {
+                      [ cursorSort.field ]: {
+                        [ cursorSort.asc ? '$gt' : '$lt' ]: cursorSort.value
+                      }
+                    },
+                    {
+                      [ cursorSort.field ]: cursorSort.value,
+                      _id: {
+                        $gt: new ObjectId(decodedCursor.id)
+                      }
+                    }
+                  ]
                 }
               ]
             }
-
           } else if (decodedCursor.id) {
             // filter cursor based on _id
             filterWithCursor = {
-              ...filterWithCursor,
-              _id: { $gt: new ObjectId(decodedCursor.id) }
+              $and: [
+                filterWithCursor,
+                { _id: { $gt: new ObjectId(decodedCursor.id) } }
+              ]
             }
           }
         }
 
-        let mongoCursor = collection
-          .find(filterWithCursor)
-          .limit(limit)
+        let mongoCursor = collection.find(filterWithCursor).limit(limit)
 
         // sort is parsed before passing to sort()
         if (sort) {

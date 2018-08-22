@@ -13,10 +13,18 @@ export class ConsoleLogService extends LogService {
   }
 
   log (message: string): void {
-    console.log(message)
+    if (typeof message === 'string') {
+      console.log(message)
+    } else {
+      console.log(JSON.stringify(message, null, 2))
+    }
   }
 
   debug (message: string | object): void {
-    console.debug(message)
+    if (typeof message === 'string') {
+      console.debug(message)
+    } else {
+      console.debug(JSON.stringify(message, null, 2))
+    }
   }
 }

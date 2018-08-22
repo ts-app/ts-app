@@ -259,6 +259,52 @@ describe('MongoService', async () => {
     )
   })
 
+  test('find() query, paging with cursor', done => {
+    const input = {
+      q: 'al',
+      limit: 1
+    }
+    const findBy = [ 'name' ]
+
+    // --- get page 1
+    createTestData$().pipe(
+      concatMap(() => mongoService.find<TestData>('test', input, findBy)),
+      tap(find => {
+        expect(find.docs.length).toBe(1)
+        expect(find.docs.map(doc => omitVolatile(doc))).toMatchSnapshot()
+        expect(find.cursor).toBeTruthy()
+      }),
+
+      // --- get page 2 (with same query but with cursor)
+      concatMap(find => mongoService.find<TestData>('test', {
+        ...input,
+        cursor: find.cursor
+      }, findBy)),
+      tap(find => {
+        expect(find.docs.length).toBe(1)
+        expect(find.docs.map(doc => omitVolatile(doc))).toMatchSnapshot()
+        expect(find.cursor).toBeTruthy()
+      }),
+
+      // --- get page 3 (with same query but with cursor) - no more docs
+      concatMap(find => mongoService.find<TestData>('test', {
+        ...input,
+        cursor: find.cursor
+      }, findBy)),
+      tap(find => {
+        expect(find.docs.length).toBe(0)
+        expect(find.cursor).toBeFalsy()
+      })
+    ).subscribe(
+      undefined,
+      undefined,
+      () => {
+        expect.assertions(8)
+        done()
+      }
+    )
+  })
+
   test('find() paging with sorting', done => {
     const removeIdFromDocs = (docs: FindOutput<TestData>) => ({
       ...docs,

@@ -91,6 +91,24 @@ Array [
 ]
 `;
 
+exports[`MongoService find() query, paging with cursor 1`] = `
+Array [
+  Object {
+    "age": 25,
+    "name": "alan",
+  },
+]
+`;
+
+exports[`MongoService find() query, paging with cursor 2`] = `
+Array [
+  Object {
+    "age": 12,
+    "name": "ali",
+  },
+]
+`;
+
 exports[`MongoService find() sort, query word starts/ends with 1`] = `
 Array [
   Object {

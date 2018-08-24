@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MongoRoleService addUsersToRoles 1`] = `
+exports[`MongoRoleService addUsersToRoles() 1`] = `
 Object {
   "emails": Array [
     Object {
@@ -19,7 +19,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 2`] = `
+exports[`MongoRoleService addUsersToRoles() 2`] = `
 Object {
   "emails": Array [
     Object {
@@ -38,7 +38,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 3`] = `
+exports[`MongoRoleService addUsersToRoles() 3`] = `
 Object {
   "emails": Array [
     Object {
@@ -57,7 +57,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 4`] = `
+exports[`MongoRoleService addUsersToRoles() 4`] = `
 Object {
   "emails": Array [
     Object {
@@ -76,7 +76,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 5`] = `
+exports[`MongoRoleService addUsersToRoles() 5`] = `
 Object {
   "emails": Array [
     Object {
@@ -95,7 +95,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 6`] = `
+exports[`MongoRoleService addUsersToRoles() 6`] = `
 Object {
   "emails": Array [
     Object {
@@ -114,7 +114,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 7`] = `
+exports[`MongoRoleService addUsersToRoles() 7`] = `
 Object {
   "emails": Array [
     Object {
@@ -133,7 +133,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 8`] = `
+exports[`MongoRoleService addUsersToRoles() 8`] = `
 Object {
   "emails": Array [
     Object {
@@ -157,7 +157,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 9`] = `
+exports[`MongoRoleService addUsersToRoles() 9`] = `
 Object {
   "emails": Array [
     Object {
@@ -197,7 +197,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 10`] = `
+exports[`MongoRoleService addUsersToRoles() 10`] = `
 Object {
   "emails": Array [
     Object {
@@ -221,7 +221,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 11`] = `
+exports[`MongoRoleService addUsersToRoles() 11`] = `
 Object {
   "emails": Array [
     Object {
@@ -245,7 +245,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 12`] = `
+exports[`MongoRoleService addUsersToRoles() 12`] = `
 Object {
   "emails": Array [
     Object {
@@ -273,7 +273,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 13`] = `
+exports[`MongoRoleService addUsersToRoles() 13`] = `
 Object {
   "emails": Array [
     Object {
@@ -301,7 +301,7 @@ Object {
 }
 `;
 
-exports[`MongoRoleService addUsersToRoles 14`] = `
+exports[`MongoRoleService addUsersToRoles() 14`] = `
 Object {
   "emails": Array [
     Object {
@@ -331,6 +331,24 @@ Object {
     "password": Object {},
   },
 }
+`;
+
+exports[`MongoRoleService addUsersToRoles() with existing role 1`] = `
+Array [
+  Object {
+    "group": "_global_",
+    "role": "Users",
+  },
+]
+`;
+
+exports[`MongoRoleService addUsersToRoles() with existing role 2`] = `
+Array [
+  Object {
+    "group": "_global_",
+    "role": "Users",
+  },
+]
 `;
 
 exports[`MongoRoleService findRoles() - simple, with query, with cursor & paging 1`] = `

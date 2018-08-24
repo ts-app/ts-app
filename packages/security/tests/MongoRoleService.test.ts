@@ -1,6 +1,6 @@
 import { omitVolatile, User } from '@ts-app/common'
 import { MongoService } from '@ts-app/mongo'
-import { of, forkJoin } from 'rxjs'
+import { of, forkJoin, zip, merge } from 'rxjs'
 import { catchError, concatMap, tap, toArray, mapTo, map } from 'rxjs/operators'
 import {
   MongoRoleService,
@@ -96,7 +96,7 @@ describe('MongoRoleService', async () => {
     )
   }
 
-  test('addUsersToRoles', done => {
+  test('addUsersToRoles()', done => {
     // addUsersToRoles() is called from createTestUsers$()
     createTestUsers$().pipe(
       concatMap(userIds => of(...Object.values(userIds))),
@@ -107,6 +107,32 @@ describe('MongoRoleService', async () => {
       undefined,
       () => {
         expect.assertions(14)
+        done()
+      }
+    )
+  })
+
+  test('addUsersToRoles() with existing role', done => {
+    const users = [
+      { email: `user1@test.local`, password: '123' },
+      { email: `user2@test.local`, password: '123' }
+    ]
+    of(...users).pipe(
+      concatMap(user => securityService.signUp(user)),
+      concatMap(signUp => {
+        const userId = signUp.user!.id
+        return roleService.addUsersToRoles({
+          userIds: [ userId ],
+          roles: [ 'Users' ]
+        }).pipe(mapTo(userId))
+      }),
+      concatMap(userId => securityService.user(userId)),
+      tap(user => expect(user!.roles).toMatchSnapshot())
+    ).subscribe(
+      undefined,
+      e => console.error(e),
+      () => {
+        expect.assertions(2)
         done()
       }
     )

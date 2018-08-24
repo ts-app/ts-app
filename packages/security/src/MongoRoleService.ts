@@ -1,7 +1,7 @@
 import { MongoService } from '@ts-app/mongo'
 import { assert, FindInput, FindOutput, User, makeTimestampable } from '@ts-app/common'
 import { Observable, of, throwError } from 'rxjs'
-import { concatMap, mapTo, map, catchError } from 'rxjs/operators'
+import { concatMap, mapTo, map, catchError, toArray } from 'rxjs/operators'
 import { RoleService } from './RoleService'
 import { Role } from './Role'
 import { ObjectId } from 'bson'
@@ -18,14 +18,18 @@ export class MongoRoleService extends RoleService {
       return throwError('Group cannot start with \'$\'')
     }
 
-    // --- create missing roles in role collection
     return this.mongoService.cursor<Role>('roles', { name: { $in: input.roles } }).pipe(
       concatMap(cursor => cursor.toArray()),
+      // --- create missing role(s) in role collection
       concatMap(matchingRolesInDb => {
         const rolesNotInDb = input.roles.filter(roleName => !matchingRolesInDb.find(roleInDb => roleInDb.name === roleName))
-        return of(...rolesNotInDb).pipe(
-          concatMap(roleName => this.createRole(roleName))
-        )
+        if (rolesNotInDb) {
+          return of(...rolesNotInDb).pipe(
+            concatMap(roleName => this.createRole(roleName))
+          ).pipe(toArray())
+        } else {
+          return of(null)
+        }
       }),
 
       // --- assign roles to users collection

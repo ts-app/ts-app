@@ -232,4 +232,8 @@ export class MongoRoleService extends RoleService {
       })
     )
   }
+
+  role (id: string): Observable<Role | null> {
+    return this.mongoService.get('roles', id)
+  }
 }

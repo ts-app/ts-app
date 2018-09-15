@@ -1,6 +1,6 @@
 import { omitVolatile, User } from '@ts-app/common'
 import { MongoService } from '@ts-app/mongo'
-import { of, forkJoin, zip, merge } from 'rxjs'
+import { of, forkJoin } from 'rxjs'
 import { catchError, concatMap, tap, toArray, mapTo, map } from 'rxjs/operators'
 import {
   MongoRoleService,
@@ -548,5 +548,16 @@ describe('MongoRoleService', async () => {
       expect.assertions(8)
       done()
     })
+  })
+
+  test('role()', done => {
+    roleService.createRole('sample-role').pipe(
+      concatMap(id => roleService.role(id)),
+    ).subscribe(
+      role => {
+        expect(role!.name).toBe('sample-role')
+        done()
+      }
+    )
   })
 })

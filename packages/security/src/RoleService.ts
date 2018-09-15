@@ -75,4 +75,11 @@ export abstract class RoleService {
    * restricted based on group name.
    */
   abstract isUserInRoles (input: { userId: string, roles: string[], group?: string }): Observable<boolean>
+
+  /**
+   * Get role with the specified ID.
+   *
+   * @param id
+   */
+  abstract role (id: string): Observable<Role | null>
 }

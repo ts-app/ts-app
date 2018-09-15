@@ -236,4 +236,13 @@ export class MongoRoleService extends RoleService {
   role (id: string): Observable<Role | null> {
     return this.mongoService.get('roles', id)
   }
+
+  updateRole (id: string, role: Partial<Role>): Observable<null> {
+    return this.mongoService.update('roles', id, {
+      $set: {
+        modifiedDate: new Date(),
+        name: role.name
+      }
+    })
+  }
 }

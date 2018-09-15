@@ -82,4 +82,6 @@ export abstract class RoleService {
    * @param id
    */
   abstract role (id: string): Observable<Role | null>
+
+  abstract updateRole (id: string, role: Partial<Role>): Observable<null>
 }

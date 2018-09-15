@@ -560,4 +560,16 @@ describe('MongoRoleService', async () => {
       }
     )
   })
+
+  test('updateRole()', done => {
+    roleService.createRole('sample-role').pipe(
+      concatMap(id => roleService.updateRole(id, { name: 'updated-sample-role' }).pipe(mapTo(id))),
+      concatMap(id => roleService.role(id))
+    ).subscribe(
+      role => {
+        expect(role!.name).toBe('updated-sample-role')
+        done()
+      }
+    )
+  })
 })

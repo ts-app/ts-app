@@ -552,7 +552,7 @@ describe('MongoRoleService', async () => {
 
   test('role()', done => {
     roleService.createRole('sample-role').pipe(
-      concatMap(id => roleService.role(id)),
+      concatMap(id => roleService.role(id))
     ).subscribe(
       role => {
         expect(role!.name).toBe('sample-role')
